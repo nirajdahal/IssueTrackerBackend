@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IssueTracker.Extensions;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace IssueTracker
 {
@@ -18,6 +20,7 @@ namespace IssueTracker
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -30,6 +33,10 @@ namespace IssueTracker
             services.ConfigureCors();
             services.ConfigureLoggerService();
             services.ConfigureIISIntegration();
+            services.ConfigureSqlContext(Configuration);
+            services.ConfigureIdentityService();
+            services.ConfigureJwtService();
+            services.ConfigureIdenittyPassword();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,9 +48,10 @@ namespace IssueTracker
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("CorsPolicy");
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
