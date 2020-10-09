@@ -51,6 +51,8 @@ namespace IssueTracker.Extensions
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 8;
+                options.User.RequireUniqueEmail = true;
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+ ";
             });
         }
         public static void ConfigureJwtService(this IServiceCollection services)
