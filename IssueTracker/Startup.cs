@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using IssueTracker.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,13 @@ namespace IssueTracker
             services.ConfigureIdentityService();
             services.ConfigureJwtService();
             services.ConfigureIdenittyPassword();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            }).AddNewtonsoftJson();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

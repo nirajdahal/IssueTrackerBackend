@@ -1,4 +1,6 @@
-﻿using Library.Entities.Enums;
+﻿using AutoMapper;
+using Library.Entities.DTO;
+using Library.Entities.Enums;
 using Library.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +16,13 @@ namespace IssueTracker.Controllers
     {
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
 
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
 
@@ -41,19 +45,22 @@ namespace IssueTracker.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = model.Username,
+                    Name= model.Name,
                     Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName
+                    UserName = model.Email
                 };
                 var userWithSameEmail = await _userManager.FindByEmailAsync(model.Email);
                 if (userWithSameEmail == null)
                 {
+                    
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, UserRoles.default_role.ToString());
-                        return $"User Registered with username {user.UserName}";
+                        //return $"Sucessfully registered with username {user.Name}";
+                        var userToReturn = _mapper.Map<RegisterModelDto>(model);
+                        //return CreatedAtRoute($"Sucessfully registered the user {user.Name}", userToReturn);
+                        return StatusCode(201);
                     }
 
                     //this throws error
@@ -65,7 +72,7 @@ namespace IssueTracker.Controllers
                 }
                 else
                 {
-                    return $"Email {user.Email } is already registered.";
+                    return $"Sorry ! Email {user.Email } is already registered.";
                 }
             }
             catch(Exception ex)
