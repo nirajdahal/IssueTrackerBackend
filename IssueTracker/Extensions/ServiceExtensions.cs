@@ -47,14 +47,10 @@ namespace IssueTracker.Extensions
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = true;
-<<<<<<< HEAD
+                options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
-=======
-                options.Password.RequiredLength = 8;
->>>>>>> features_backend
                 options.User.RequireUniqueEmail = true;
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+ ";
             });

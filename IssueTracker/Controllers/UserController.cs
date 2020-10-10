@@ -57,10 +57,10 @@ namespace IssueTracker.Controllers
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, UserRoles.default_role.ToString());
-                        //return $"Sucessfully registered with username {user.Name}";
+                        
                         var userToReturn = _mapper.Map<RegisterModelDto>(model);
-                        //return CreatedAtRoute($"Sucessfully registered the user {user.Name}", userToReturn);
-                        return StatusCode(201);
+                        var output =  ($"Sucessfully registered the user {user.Name}");
+                        return output;
                     }
 
                     //this throws error
