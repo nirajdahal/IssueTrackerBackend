@@ -13,6 +13,7 @@ namespace IssueTracker
         public MappingProfile()
         {
             CreateMap< RegisterModel, RegisterModelDto>();
+            CreateMap<ApplicationUser, LoginModelDto>();
         }
     }
 

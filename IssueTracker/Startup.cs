@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using IssueTracker.Extensions;
+using Library.Entities.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,13 +31,14 @@ namespace IssueTracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            //Inject AppSettings
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             services.ConfigureCors();
             services.ConfigureLoggerService();
             services.ConfigureIISIntegration();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureIdentityService();
-            services.ConfigureJwtService();
+            services.ConfigureJwtService(Configuration);
             services.ConfigureIdenittyPassword();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers(config =>
