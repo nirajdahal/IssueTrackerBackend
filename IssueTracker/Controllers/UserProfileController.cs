@@ -13,18 +13,18 @@ namespace IssueTracker.Controllers
 {
     [Route("api/profile")]
     [ApiController]
-    public class UserProfile : ControllerBase
+    public class UserProfileController : ControllerBase
     {
         private UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public UserProfile(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserProfileController(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
         }
         [HttpGet]
-        [Authorize]
-        //GET : /api/UserProfile
+        [Authorize(Roles ="Admin, Submitter")]
+        //GET : /api/profile
         public async Task<Object> GetUserProfile()
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
