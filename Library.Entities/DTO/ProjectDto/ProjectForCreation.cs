@@ -9,6 +9,7 @@ namespace Library.Entities.DTO.ProjectDto
     {
 
         [MaxLength(60, ErrorMessage = "Maximum length for the Title is 60 characters.")]
+        
         public string Title { get; set; }
 
         [Required]

@@ -35,7 +35,7 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Project object sent from client is null.");
                 return BadRequest("Empty Project Cannot Be Created");
             }
-
+            
 
             if (!ModelState.IsValid)
             {
@@ -46,7 +46,16 @@ namespace IssueTracker.Controllers
             projectToCreate.CreatedAt = DateTime.Now;
             _repo.Project.CreateProject(projectToCreate);
             await _repo.Save();
-            return Ok();
+            return Ok("Project Created Sucessfully");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProjects()
+        {
+
+
+            var projects =_repo.Project.FindAll();
+            return Ok(projects);
         }
     }
 }
