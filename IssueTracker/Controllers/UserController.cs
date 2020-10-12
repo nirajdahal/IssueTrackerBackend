@@ -75,11 +75,7 @@ namespace IssueTracker.Controllers
 
         }
 
-
-
-        
-
-            public async Task<object> RegisterUserHelper(RegisterModel model)
+        public async Task<object> RegisterUserHelper(RegisterModel model)
         {
             try
             {

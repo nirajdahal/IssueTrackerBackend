@@ -4,14 +4,16 @@ using Library.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20201012115206_addedProjectTicketModel")]
+    partial class addedProjectTicketModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +43,7 @@ namespace IssueTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.Ticket", b =>
@@ -90,7 +92,7 @@ namespace IssueTracker.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickett");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketPriority", b =>
