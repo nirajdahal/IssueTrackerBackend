@@ -47,6 +47,11 @@ namespace IssueTracker
                 config.ReturnHttpNotAcceptable = true;
             }).AddNewtonsoftJson();
             services.ConfigureRepositiryManager();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
 
         }
 

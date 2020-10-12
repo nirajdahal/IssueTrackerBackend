@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Library.Entities.DTO;
+using Library.Entities.DTO.ProjectDto;
 using Library.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Library.Entities.Models.Projects;
 
 namespace IssueTracker
 {
@@ -12,8 +10,9 @@ namespace IssueTracker
     {
         public MappingProfile()
         {
-            CreateMap< RegisterModel, RegisterModelDto>();
-            CreateMap<ApplicationUser, LoginModelDto>();
+            CreateMap<RegisterModelDto, RegisterModel>();
+            CreateMap<LoginModelDto, LoginModel>();
+            CreateMap<ProjectForCreation, Project>();
         }
     }
 

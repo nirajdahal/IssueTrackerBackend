@@ -19,7 +19,7 @@ namespace Library.Entities.Models.Projects
         [Required]
         [MaxLength(160, ErrorMessage = "Maximum length for the Title is 160 characters.")]
         public string Description { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } 
         public ICollection<Ticket> Ticket { get; set; }
         public ICollection<UserProject> UsersProjects { get; set; }
 

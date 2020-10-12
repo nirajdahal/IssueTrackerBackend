@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Contracts;
 using Library.Entities.DTO;
 using Library.Entities.Enums;
 using Library.Entities.Models;
@@ -23,25 +24,37 @@ namespace IssueTracker.Controllers
         private SignInManager<ApplicationUser> _signInManager;
         private ApplicationSettings _appSettings;
         private readonly IMapper _mapper;
+        private ILoggerManager _logger;
 
-        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper, IOptions<ApplicationSettings> appSettings)
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper, IOptions<ApplicationSettings> appSettings, ILoggerManager logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("login")]
 
         public async Task<IActionResult> LoginUser(LoginModel model)
         {
+            if (model == null)
+            {
+                _logger.LogError("Login Model sent from client is null.");
+                return BadRequest("Empty User Cannot Be Logged In");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the Login");
+                return UnprocessableEntity(ModelState);
+            }
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 //get current role for the user
                 var userRole = await _userManager.GetRolesAsync(user);
-                IdentityOptions _options = new IdentityOptions();
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
@@ -62,19 +75,25 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser(RegisterModel model)
+        public async Task<IActionResult> RegisterUser(RegisterModelDto model)
         {
+            if(model == null)
+            {
+                _logger.LogError("Register Model sent from client is null.");
+                return BadRequest("User Cannot Be Created as it is empty");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the Registration");
+                return UnprocessableEntity(ModelState);
+            }
             var result = await RegisterUserHelper(model);
-            /* Use CreatedAtRoute method to return the user and use the help of
-               GetUserMethod to return the user.
-               return CreatedAtRoute("UserToReturn", new { id = useroReturn.Id
-               }, useroReturn);
-            */
             return Ok(result);
 
         }
 
-        public async Task<object> RegisterUserHelper(RegisterModel model)
+        public async Task<object> RegisterUserHelper(RegisterModelDto model)
         {
             try
             {
@@ -93,7 +112,7 @@ namespace IssueTracker.Controllers
                     {
                         await _userManager.AddToRoleAsync(user, UserRoles.default_role.ToString());
                         
-                        var userToReturn = _mapper.Map<RegisterModelDto>(model);
+                        var userToReturn = _mapper.Map<RegisterModel>(model);
                         var output =  ($"Sucessfully registered the user {user.Name}");
                         return output;
                     }
