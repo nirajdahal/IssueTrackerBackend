@@ -2,6 +2,7 @@
 using Library.Entities;
 using Library.Entities.Models;
 using Library.LoggerService;
+using Library.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -57,7 +58,7 @@ namespace IssueTracker.Extensions
         }
         public static void ConfigureJwtService(this IServiceCollection services, IConfiguration Configuration)
         {
-           
+
 
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
 
@@ -66,7 +67,8 @@ namespace IssueTracker.Extensions
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x => {
+            }).AddJwtBearer(x =>
+            {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = false;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -79,5 +81,8 @@ namespace IssueTracker.Extensions
                 };
             });
         }
+
+        public static void ConfigureRepositiryManager(this IServiceCollection services) =>
+                services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }

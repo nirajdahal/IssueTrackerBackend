@@ -32,7 +32,6 @@ namespace IssueTracker.Controllers
             _appSettings = appSettings.Value;
         }
 
-
         [HttpPost("login")]
 
         public async Task<IActionResult> LoginUser(LoginModel model)

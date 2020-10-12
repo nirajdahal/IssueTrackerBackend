@@ -12,8 +12,6 @@ namespace Library.Entities.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [Column("UserId")]
-        public new Guid Id { get; set; }
         public string Name{ get; set; }
         public ICollection<UserProject> UsersProjects{ get; set; }
         public ICollection<UserTicket> UsersTickets { get; set; }

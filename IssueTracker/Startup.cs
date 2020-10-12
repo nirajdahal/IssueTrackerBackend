@@ -46,6 +46,7 @@ namespace IssueTracker
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
             }).AddNewtonsoftJson();
+            services.ConfigureRepositiryManager();
 
         }
 
