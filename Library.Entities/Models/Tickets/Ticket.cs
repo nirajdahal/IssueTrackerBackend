@@ -18,22 +18,28 @@ namespace Library.Entities.Models.Tickets
         public string Title { get; set; }
 
         [Required]
-        [MaxLength(160, ErrorMessage = "Maximum length for the Title is 160 characters.")]
+        [MaxLength(160, ErrorMessage = "Maximum length for the Description is 160 characters.")]
         public string Description { get; set; }
 
         public string SubmitterName { get; set; }
 
-        [MaxLength(160, ErrorMessage = "Maximum length for the Title is 160 characters.")]
-        public string Comments { get; set; }
+        [MaxLength(160, ErrorMessage = "Maximum length for the Comments is 160 characters.")]
+        public ICollection<TicketComments> Comments { get; set; }
 
-        [Required]
-        public TicketType Type { get; set; }
+        [ForeignKey(nameof(TicketType))]
+        public Guid TTypeId { get; set; }
 
-        [Required]
-        public TicketStatus Status { get; set; }
+        public TicketType TicketType { get; set; }
 
-        [Required]
-        public TicketPriority Priority { get; set; }
+        [ForeignKey(nameof(TicketStatus))]
+        public Guid TStatusId { get; set; }
+
+        public TicketStatus TicketStatus { get; set; }
+
+        [ForeignKey(nameof(TicketPriority))]
+        public Guid TPriorityId { get; set; }
+
+        public TicketPriority TicketPriority { get; set; }
 
         [ForeignKey(nameof(Project))]
         public Guid ProjectId { get; set; }
@@ -41,5 +47,7 @@ namespace Library.Entities.Models.Tickets
         public Project Project { get; set; }
 
         public ICollection<UserTicket> UsersTickets { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }

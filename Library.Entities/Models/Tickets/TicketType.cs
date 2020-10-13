@@ -9,7 +9,9 @@ namespace Library.Entities.Models.Tickets
     {
         [Column("TTypeId")]
         public Guid Id { get; set; }
-
         public string Name { get; set; }
+        public ICollection<Ticket> Ticket { get; set; }
+
+       
     }
 }

@@ -4,14 +4,16 @@ using Library.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20201013160039_UpdatedModelsDb")]
+    partial class UpdatedModelsDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,7 +165,6 @@ namespace IssueTracker.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Id")
-                        .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProjectId", "Id");
@@ -179,7 +180,6 @@ namespace IssueTracker.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Id")
-                        .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("TicketId", "Id");

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Library.Entities.DTO;
 using Library.Entities.DTO.ProjectDto;
+using Library.Entities.DTO.TicketDto;
 using Library.Entities.Models;
 using Library.Entities.Models.Projects;
+using Library.Entities.Models.Tickets;
 
 namespace IssueTracker
 {
@@ -13,6 +15,7 @@ namespace IssueTracker
             CreateMap<RegisterModelDto, RegisterModel>();
             CreateMap<LoginModelDto, LoginModel>();
             CreateMap<ProjectForCreation, Project>();
+            CreateMap<TicketForCreationDto, Ticket>();
         }
     }
 

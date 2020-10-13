@@ -15,8 +15,9 @@ namespace Library.Entities.Models.UsersTickets
         public Ticket Ticket { get; set; }
 
         [ForeignKey(nameof(ApplicationUser))]
-        public Guid UserId { get; set; }
+        [Column("UserId")]
+        public string Id { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

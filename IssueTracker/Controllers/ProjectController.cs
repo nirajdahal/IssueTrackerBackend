@@ -52,9 +52,9 @@ namespace IssueTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-
-
+            
             var projects =_repo.Project.FindAll();
+            
             return Ok(projects);
         }
     }

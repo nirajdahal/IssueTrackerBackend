@@ -4,14 +4,16 @@ using Library.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20201013154941_UpdatedModelsInDb")]
+    partial class UpdatedModelsInDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,13 +164,15 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Id")
-                        .HasColumnName("UserId")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProjectId", "Id");
+                    b.HasKey("ProjectId", "UserId");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("UserProject");
                 });
@@ -178,13 +182,15 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Id")
-                        .HasColumnName("UserId")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("TicketId", "Id");
+                    b.HasKey("TicketId", "UserId");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("UserTicket");
                 });
@@ -439,32 +445,28 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.UserProject", b =>
                 {
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("UsersProjects")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Library.Entities.Models.Projects.Project", "Project")
                         .WithMany("UsersProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "User")
+                        .WithMany("UsersProjects")
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.UsersTickets.UserTicket", b =>
                 {
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("UsersTickets")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("UsersTickets")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "User")
+                        .WithMany("UsersTickets")
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
