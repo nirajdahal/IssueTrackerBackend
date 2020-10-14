@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20201013154941_UpdatedModelsInDb")]
-    partial class UpdatedModelsInDb
+    [Migration("20201013171001_UpdatedModels")]
+    partial class UpdatedModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -164,15 +164,13 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProjectId", "UserId");
+                    b.HasKey("ProjectId", "Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Id");
 
                     b.ToTable("UserProject");
                 });
@@ -182,15 +180,13 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("TicketId", "UserId");
+                    b.HasKey("TicketId", "Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Id");
 
                     b.ToTable("UserTicket");
                 });
@@ -445,28 +441,32 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.UserProject", b =>
                 {
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("UsersProjects")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Entities.Models.Projects.Project", "Project")
                         .WithMany("UsersProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "User")
-                        .WithMany("UsersProjects")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.UsersTickets.UserTicket", b =>
                 {
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("UsersTickets")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("UsersTickets")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "User")
-                        .WithMany("UsersTickets")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

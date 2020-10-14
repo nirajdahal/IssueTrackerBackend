@@ -32,8 +32,6 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Ticket object sent from client is null.");
                 return BadRequest("Empty Ticket Cannot Be Created");
             }
-
-
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the Ticket");
@@ -41,6 +39,7 @@ namespace IssueTracker.Controllers
             }
             var ticketToCreate = _mapper.Map<Ticket>(ticket);
             ticketToCreate.CreatedAt = DateTime.Now;
+            ticketToCreate.ProjectId = new Guid("C3F24DF1-60C1-45F2-DBE6-08D86FA01176");
             _repo.Ticket.CreateTicket(ticketToCreate);
             await _repo.Save();
             return Ok("Ticket Created Sucessfully");

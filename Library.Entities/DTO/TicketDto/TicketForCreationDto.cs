@@ -11,7 +11,7 @@ namespace Library.Entities.DTO.TicketDto
 {
     public class TicketForCreationDto
     {
-     
+
 
         [Required]
         [MaxLength(60, ErrorMessage = "Maximum length for the Title is 60 characters.")]
@@ -24,16 +24,14 @@ namespace Library.Entities.DTO.TicketDto
         public string SubmitterName { get; set; }
 
         [MaxLength(160, ErrorMessage = "Maximum length for the Comments is 160 characters.")]
-        public string Comments { get; set; }
-        [Required]
-        public TicketType Type { get; set; }
+        public ICollection<TicketComments> Comments { get; set; }
 
-        [Required]
-        public TicketStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        [Required]
-        public TicketPriority Priority { get; set; }
 
-       
+        public Guid CompanyIdFrom { get; set; }
+
+
+
     }
 }

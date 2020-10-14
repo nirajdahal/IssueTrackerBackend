@@ -53,9 +53,9 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> GetAllProjects()
         {
             
-            var projects =_repo.Project.FindAll();
+            var projects =_repo.Project.FindByCondition(x =>x.Id == new Guid("74342A6A-AF25-42A7-DCF6-08D86F9B0602"));
             
-            return Ok(projects);
+            return Ok(projects.SelectMany(x =>x.Ticket));
         }
     }
 }

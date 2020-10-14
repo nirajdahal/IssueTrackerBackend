@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20201013064123_updatedModels")]
-    partial class updatedModels
+    [Migration("20201013174355_UpdatedModelDb")]
+    partial class UpdatedModelDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,12 +32,10 @@ namespace IssueTracker.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(160)")
                         .HasMaxLength(160);
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(60)")
                         .HasMaxLength(60);
 
@@ -67,6 +65,15 @@ namespace IssueTracker.Migrations
                     b.Property<string>("SubmitterName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TPriorityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TStatusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(60)")
@@ -75,6 +82,12 @@ namespace IssueTracker.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("TPriorityId");
+
+                    b.HasIndex("TStatusId");
+
+                    b.HasIndex("TTypeId");
 
                     b.ToTable("Tickets");
                 });
@@ -109,13 +122,7 @@ namespace IssueTracker.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TicketId")
-                        .IsUnique();
 
                     b.ToTable("TicketPriority");
                 });
@@ -130,13 +137,7 @@ namespace IssueTracker.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TicketId")
-                        .IsUnique();
 
                     b.ToTable("TicketStatus");
                 });
@@ -151,13 +152,7 @@ namespace IssueTracker.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TicketId")
-                        .IsUnique();
 
                     b.ToTable("TicketType");
                 });
@@ -167,15 +162,13 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProjectId", "UserId");
+                    b.HasKey("ProjectId", "Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Id");
 
                     b.ToTable("UserProject");
                 });
@@ -185,15 +178,13 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("TicketId", "UserId");
+                    b.HasKey("TicketId", "Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("Id");
 
                     b.ToTable("UserTicket");
                 });
@@ -417,6 +408,24 @@ namespace IssueTracker.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.Tickets.TicketPriority", "TicketPriority")
+                        .WithMany("Ticket")
+                        .HasForeignKey("TPriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.Tickets.TicketStatus", "TicketStatus")
+                        .WithMany("Ticket")
+                        .HasForeignKey("TStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.Tickets.TicketType", "TicketType")
+                        .WithMany("Ticket")
+                        .HasForeignKey("TTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComments", b =>
@@ -428,57 +437,34 @@ namespace IssueTracker.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Library.Entities.Models.Tickets.TicketPriority", b =>
-                {
-                    b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
-                        .WithOne("Priority")
-                        .HasForeignKey("Library.Entities.Models.Tickets.TicketPriority", "TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Library.Entities.Models.Tickets.TicketStatus", b =>
-                {
-                    b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
-                        .WithOne("Status")
-                        .HasForeignKey("Library.Entities.Models.Tickets.TicketStatus", "TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Library.Entities.Models.Tickets.TicketType", b =>
-                {
-                    b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
-                        .WithOne("Type")
-                        .HasForeignKey("Library.Entities.Models.Tickets.TicketType", "TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.UserProject", b =>
                 {
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("UsersProjects")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Entities.Models.Projects.Project", "Project")
                         .WithMany("UsersProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "User")
-                        .WithMany("UsersProjects")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.UsersTickets.UserTicket", b =>
                 {
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("UsersTickets")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("UsersTickets")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "User")
-                        .WithMany("UsersTickets")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

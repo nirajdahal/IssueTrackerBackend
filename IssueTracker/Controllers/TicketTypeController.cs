@@ -32,8 +32,6 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> CreateTicket(TicketPriority ticket)
         {
 
-
-
             _context.Add(ticket);
            await  _context.SaveChangesAsync();
             
