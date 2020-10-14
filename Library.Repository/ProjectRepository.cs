@@ -35,7 +35,7 @@ namespace Library.Repository
 
         public async Task<Project> GetProject(Guid projectId)
         {
-            var projects = await FindByCondition(p => p.Id.Equals(projectId)).SingleOrDefaultAsync();
+            var projects = await FindByCondition(p => p.Id.Equals(projectId)).Include(p =>p.Ticket).SingleOrDefaultAsync();
             return projects;
         }
 

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Library.Entities.Models.Tickets
 {
-    public class TicketComments
+    public class TicketComment
     {
 
         [Column("TCommentsId")]
-        public Guid Id { get; set; }
+        public Guid CommentsId { get; set; }
 
         public string Description { get; set; }
 
@@ -17,5 +17,13 @@ namespace Library.Entities.Models.Tickets
         public Guid TicketId { get; set; }
 
         public Ticket Ticket{ get; set; }
+
+        [ForeignKey(nameof(ApplicationUser))]
+
+
+        [Column("UserId")]
+        public string Id { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

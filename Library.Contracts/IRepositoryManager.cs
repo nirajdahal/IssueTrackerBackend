@@ -11,6 +11,12 @@ namespace Library.Contracts
 
         ITicketRepository Ticket { get; }
 
+        ITicketTypeRepository TicketType { get; }
+
+        ITicketStatusRepository TicketStatus { get; }
+
+        ITicketPriorityRepository TicketPriority { get; }
+
         Task Save();
     }
 }

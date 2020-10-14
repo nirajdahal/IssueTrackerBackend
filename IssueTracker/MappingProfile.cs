@@ -15,7 +15,10 @@ namespace IssueTracker
             CreateMap<RegisterModelDto, RegisterModel>();
             CreateMap<LoginModelDto, LoginModel>();
             CreateMap<ProjectForCreation, Project>();
-            CreateMap<TicketForCreationDto, Ticket>();
+            CreateMap<TicketForCreationDto, Ticket>()
+                .ForMember(dest => dest.TPriorityId, opt => opt.MapFrom(src => src.TPriorityId))
+                .ForMember(dest => dest.TTypeId, opt => opt.MapFrom(src => src.TTypeId))
+                .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId));
         }
     }
 

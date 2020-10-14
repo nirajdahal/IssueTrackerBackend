@@ -12,6 +12,9 @@ namespace Library.Repository
         private RepositoryContext _context;
         private IProjectRepository _projectRepository;
         private ITicketRepository _ticketRepository;
+        private ITicketTypeRepository _ticketTypeRepository;
+        private ITicketStatusRepository _ticketStatusRepository;
+        private ITicketPriorityRepository _ticketPriorityRepository;
         public RepositoryManager(RepositoryContext context)
         {
             _context = context;
@@ -39,6 +42,44 @@ namespace Library.Repository
                 return _ticketRepository;
             }
         }
+
+        public ITicketTypeRepository TicketType
+        {
+            get
+            {
+                if (_ticketTypeRepository == null)
+                {
+                    _ticketTypeRepository = new TicketTypeRepository(_context);
+                }
+                return _ticketTypeRepository;
+            }
+        }
+
+        public ITicketStatusRepository TicketStatus
+        {
+
+            get
+            {
+                if (_ticketStatusRepository == null)
+                {
+                    _ticketStatusRepository = new TicketStatusRepository(_context);
+                }
+                return _ticketStatusRepository;
+            }
+        }
+
+        public ITicketPriorityRepository TicketPriority
+        {
+            get
+            {
+                if (_ticketPriorityRepository == null)
+                {
+                    _ticketPriorityRepository = new TicketPriorityRepository(_context);
+                }
+                return _ticketPriorityRepository;
+            }
+        }
+
         public async Task Save() => await _context.SaveChangesAsync();
     }
 }

@@ -28,15 +28,26 @@ namespace IssueTracker.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> CreateTicket(TicketPriority ticket)
+        //[HttpPost]
+        //public async Task<IActionResult> CreateTicket(TicketType ticket)
+        //{
+
+            
+        //   await  _context.SaveChangesAsync();
+            
+        //    await _repo.Save();
+        //    return Ok("Priority Created Sucessfully");
+        //}
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTicket(Guid id)
         {
 
-            _context.Add(ticket);
-           await  _context.SaveChangesAsync();
-            
-            await _repo.Save();
-            return Ok("Priority Created Sucessfully");
+            var priority = await _repo.TicketPriority.GetTicketPriority(id);
+            var ticket = priority.Ticket;
+
+           
+            return Ok(ticket);
         }
     }
 }

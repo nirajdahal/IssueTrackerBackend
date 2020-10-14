@@ -37,9 +37,10 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid model state for the Ticket");
                 return UnprocessableEntity(ModelState);
             }
+
             var ticketToCreate = _mapper.Map<Ticket>(ticket);
+            ticketToCreate.TStatusId = new Guid("256097cd-4147-4c73-6355-08d86f48d2ba");
             ticketToCreate.CreatedAt = DateTime.Now;
-            ticketToCreate.ProjectId = new Guid("C3F24DF1-60C1-45F2-DBE6-08D86FA01176");
             _repo.Ticket.CreateTicket(ticketToCreate);
             await _repo.Save();
             return Ok("Ticket Created Sucessfully");

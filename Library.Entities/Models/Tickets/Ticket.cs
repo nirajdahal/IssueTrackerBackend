@@ -24,7 +24,7 @@ namespace Library.Entities.Models.Tickets
         public string SubmitterName { get; set; }
 
         [MaxLength(160, ErrorMessage = "Maximum length for the Comments is 160 characters.")]
-        public ICollection<TicketComments> Comments { get; set; }
+        public ICollection<TicketComment> Comments { get; set; }
 
         [ForeignKey(nameof(TicketType))]
         public Guid TTypeId { get; set; }
