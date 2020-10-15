@@ -45,7 +45,7 @@ namespace IssueTracker
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
-            }).AddNewtonsoftJson();
+            }).AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.ConfigureRepositiryManager();
             services.Configure<ApiBehaviorOptions>(options =>
             {

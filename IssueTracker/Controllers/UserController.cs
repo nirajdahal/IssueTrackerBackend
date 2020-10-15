@@ -36,7 +36,6 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost("login")]
-
         public async Task<IActionResult> LoginUser(LoginModel model)
         {
             if (model == null)
@@ -77,7 +76,7 @@ namespace IssueTracker.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(RegisterModelDto model)
         {
-            if(model == null)
+            if (model == null)
             {
                 _logger.LogError("Register Model sent from client is null.");
                 return BadRequest("User Cannot Be Created as it is empty");
@@ -90,7 +89,6 @@ namespace IssueTracker.Controllers
             }
             var result = await RegisterUserHelper(model);
             return Ok(result);
-
         }
 
         public async Task<object> RegisterUserHelper(RegisterModelDto model)
@@ -99,21 +97,20 @@ namespace IssueTracker.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    Name= model.Name,
+                    Name = model.Name,
                     Email = model.Email,
                     UserName = model.Email
                 };
                 var userWithSameEmail = await _userManager.FindByEmailAsync(model.Email);
                 if (userWithSameEmail == null)
                 {
-                    
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, UserRoles.default_role.ToString());
-                        
+
                         var userToReturn = _mapper.Map<RegisterModel>(model);
-                        var output =  ($"Sucessfully registered the user {user.Name}");
+                        var output = ($"Sucessfully registered the user {user.Name}");
                         return output;
                     }
 
@@ -122,20 +119,16 @@ namespace IssueTracker.Controllers
                     {
                         return result;
                     }
-                    
                 }
                 else
                 {
                     return $"Sorry ! Email {user.Email } is already registered.";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex;
             }
-            
         }
     }
-
-
 }

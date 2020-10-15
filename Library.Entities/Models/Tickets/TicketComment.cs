@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -11,6 +12,7 @@ namespace Library.Entities.Models.Tickets
         [Column("TCommentsId")]
         public Guid CommentsId { get; set; }
 
+        [MaxLength(160, ErrorMessage ="The comment length cannot exceed more than 160")]
         public string Description { get; set; }
 
         [ForeignKey(nameof(Ticket))]

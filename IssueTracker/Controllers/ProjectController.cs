@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using IssueTracker.Migrations;
 using Library.Contracts;
 using Library.Entities.DTO;
 using Library.Entities.DTO.ProjectDto;
@@ -35,7 +36,7 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Project object sent from client is null.");
                 return BadRequest("Empty Project Cannot Be Created");
             }
-            
+
 
             if (!ModelState.IsValid)
             {
@@ -53,8 +54,23 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> GetAllProjects()
         {
 
-            var projects = await _repo.Project.GetProject(new Guid("74342A6A-AF25-42A7-DCF6-08D86F9B0602"));
+            var projects = await _repo.Project.GetAllProjects();
             return Ok(projects);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProject(Guid id)
+        {
+            var project = await _repo.Project.GetProject(id);
+            return Ok(project);
+        }
+
+        [HttpGet(("{id}"))]
+        public async Task<IActionResult> UpdateProject(Guid id)
+        {
+
+            var project = await _repo.Project.GetProject(id);
+            return Ok(project);
         }
     }
 }

@@ -28,25 +28,28 @@ namespace IssueTracker.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateTicket(TicketType ticket)
-        //{
-
-            
-        //   await  _context.SaveChangesAsync();
-            
-        //    await _repo.Save();
-        //    return Ok("Priority Created Sucessfully");
-        //}
+        [HttpPost]
+        public async Task<IActionResult> CreateTicket(TicketType type)
+        {
+            if(type == null)
+            {
+                _logger.LogError("Ticket Type object sent from client is null.");
+                return BadRequest("Empty ticket Type Cannot Be Created");
+            }
+            _repo.TicketType.Create(type);
+             await _repo.Save();
+            return Ok("Ticket Type was Created Sucessfully");
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTicket(Guid id)
         {
-
-            var priority = await _repo.TicketPriority.GetTicketPriority(id);
-            var ticket = priority.Ticket;
-
-           
+            if(id == null)
+            {
+                _logger.LogError("Ticket Type object sent from client is null.");
+                return BadRequest("Empty ticket Type Cannot Be Created");
+            }
+            var ticket = await _repo.TicketType.GetTicketType(id);
             return Ok(ticket);
         }
     }

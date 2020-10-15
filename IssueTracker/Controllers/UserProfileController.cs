@@ -23,7 +23,7 @@ namespace IssueTracker.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [Authorize(Roles ="Admin, Submitter")]
+        //[Authorize(Roles ="Admin, Submitter")]
         //GET : /api/profile
         public async Task<Object> GetUserProfile()
         {

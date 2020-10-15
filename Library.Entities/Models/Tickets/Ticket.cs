@@ -21,9 +21,9 @@ namespace Library.Entities.Models.Tickets
         [MaxLength(160, ErrorMessage = "Maximum length for the Description is 160 characters.")]
         public string Description { get; set; }
 
-        public string SubmitterName { get; set; }
+        public ApplicationUser UpdatedBy { get; set; }
+        public ApplicationUser SubmittedBy { get; set; }
 
-        [MaxLength(160, ErrorMessage = "Maximum length for the Comments is 160 characters.")]
         public ICollection<TicketComment> Comments { get; set; }
 
         [ForeignKey(nameof(TicketType))]
@@ -49,5 +49,9 @@ namespace Library.Entities.Models.Tickets
         public ICollection<UserTicket> UsersTickets { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+
+
     }
 }
