@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Repository
@@ -14,8 +13,8 @@ namespace Library.Repository
     {
         public TicketPriorityRepository(RepositoryContext _context) : base(_context)
         {
-
         }
+
         public void CreateTicketPriority(TicketPriority priority)
         {
             Create(priority);
@@ -28,7 +27,7 @@ namespace Library.Repository
 
         public async Task<IEnumerable<TicketPriority>> GetAllTicketPriority()
         {
-            var ticketspriorities = await FindAll().OrderBy(p =>p.Name).ToListAsync();
+            var ticketspriorities = await FindAll().OrderBy(p => p.Name).ToListAsync();
             return ticketspriorities;
         }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Library.Entities.Enums
+﻿namespace Library.Entities.Enums
 {
     public class UserRoles
     {
@@ -18,4 +14,3 @@ namespace Library.Entities.Enums
         public const Roles default_role = Roles.User;
     }
 }
-

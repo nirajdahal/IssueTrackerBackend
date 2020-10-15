@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Library.Entities.Models.Tickets
 {
@@ -9,9 +8,8 @@ namespace Library.Entities.Models.Tickets
     {
         [Column("TTypeId")]
         public Guid Id { get; set; }
+
         public string Name { get; set; }
         public ICollection<Ticket> Ticket { get; set; }
-
-       
     }
 }

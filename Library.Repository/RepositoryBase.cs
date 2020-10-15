@@ -9,10 +9,12 @@ namespace Library.Repository
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected RepositoryContext _context;
+
         public RepositoryBase(RepositoryContext context)
         {
             _context = context;
         }
+
         public void Create(T entity)
         {
             _context.Set<T>().Add(entity);

@@ -1,7 +1,6 @@
 ﻿using Library.Entities.Models.Projects;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Contracts
@@ -13,7 +12,7 @@ namespace Library.Contracts
         Task<Project> GetProject(Guid projectId);
 
         void CreateProject(Project project);
-        
+
         void DeleteProject(Project project);
 
         void UpdateProject(Project project);

@@ -20,6 +20,7 @@ namespace IssueTracker.Controllers
         private ILoggerManager _logger;
         private IMapper _mapper;
         private IRepositoryManager _repo;
+
         public TicketController(IRepositoryManager repo, ILoggerManager logger, IMapper mapper, RepositoryContext context)
         {
             _repo = repo;

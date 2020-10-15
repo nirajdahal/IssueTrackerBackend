@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using IssueTracker.Migrations;
+﻿using AutoMapper;
 using Library.Contracts;
-using Library.Entities.DTO;
 using Library.Entities.DTO.ProjectDto;
 using Library.Entities.Models.Projects;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers
 {
@@ -21,6 +15,7 @@ namespace IssueTracker.Controllers
         private IRepositoryManager _repo;
         private ILoggerManager _logger;
         private IMapper _mapper;
+
         public ProjectController(IRepositoryManager repo, ILoggerManager logger, IMapper mapper)
         {
             _repo = repo;
@@ -37,7 +32,6 @@ namespace IssueTracker.Controllers
                 return BadRequest("Empty Project Cannot Be Created");
             }
 
-
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the Project");
@@ -53,7 +47,6 @@ namespace IssueTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-
             var projects = await _repo.Project.GetAllProjects();
             return Ok(projects);
         }
@@ -68,7 +61,6 @@ namespace IssueTracker.Controllers
         [HttpGet(("{id}"))]
         public async Task<IActionResult> UpdateProject(Guid id)
         {
-
             var project = await _repo.Project.GetProject(id);
             return Ok(project);
         }

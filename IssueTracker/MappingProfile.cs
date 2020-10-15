@@ -23,5 +23,4 @@ namespace IssueTracker
             CreateMap<TicketForUpdateDto, Ticket>();
         }
     }
-
 }

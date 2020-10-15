@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
-
 namespace IssueTracker.Extensions
 {
     public static class ExceptionMiddlewareExtensions

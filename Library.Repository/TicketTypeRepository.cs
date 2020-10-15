@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Repository
@@ -14,8 +13,8 @@ namespace Library.Repository
     {
         public TicketTypeRepository(RepositoryContext _context) : base(_context)
         {
-
         }
+
         public void CreateTicketType(TicketType type)
         {
             Create(type);

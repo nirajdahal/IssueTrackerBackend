@@ -1,7 +1,6 @@
 ﻿using Library.Entities.Models.Tickets;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Contracts

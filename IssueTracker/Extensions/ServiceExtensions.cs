@@ -11,17 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueTracker.Extensions
 {
     public static class ServiceExtensions
     {
-
         public static void ConfigureCors(this IServiceCollection services) =>
         services.AddCors(options =>
         {
@@ -30,7 +25,7 @@ namespace IssueTracker.Extensions
         });
 
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
-      services.Configure<IISOptions>(options => { });
+            services.Configure<IISOptions>(options => { });
 
         public static void ConfigureLoggerService(this IServiceCollection services) =>
         services.AddScoped<ILoggerManager, LoggerManager>();
@@ -56,10 +51,9 @@ namespace IssueTracker.Extensions
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+ ";
             });
         }
+
         public static void ConfigureJwtService(this IServiceCollection services, IConfiguration Configuration)
         {
-
-
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
 
             services.AddAuthentication(x =>

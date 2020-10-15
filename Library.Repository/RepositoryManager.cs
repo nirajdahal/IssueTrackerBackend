@@ -1,8 +1,5 @@
 ﻿using Library.Contracts;
 using Library.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Repository
@@ -15,10 +12,12 @@ namespace Library.Repository
         private ITicketTypeRepository _ticketTypeRepository;
         private ITicketStatusRepository _ticketStatusRepository;
         private ITicketPriorityRepository _ticketPriorityRepository;
+
         public RepositoryManager(RepositoryContext context)
         {
             _context = context;
         }
+
         public IProjectRepository Project
         {
             get
@@ -31,6 +30,7 @@ namespace Library.Repository
                 return _projectRepository;
             }
         }
+
         public ITicketRepository Ticket
         {
             get
@@ -57,7 +57,6 @@ namespace Library.Repository
 
         public ITicketStatusRepository TicketStatus
         {
-
             get
             {
                 if (_ticketStatusRepository == null)
@@ -83,4 +82,3 @@ namespace Library.Repository
         public async Task Save() => await _context.SaveChangesAsync();
     }
 }
-
