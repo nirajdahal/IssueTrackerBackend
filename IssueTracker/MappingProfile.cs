@@ -21,6 +21,9 @@ namespace IssueTracker
                 .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
                 .ForMember(dest => dest.TStatusId, opt => opt.MapFrom(src => src.TStatusId));
             CreateMap<TicketForUpdateDto, Ticket>();
+            CreateMap<TicketPriority, TicketPriorityVmDto>();
+            CreateMap<Ticket, GetAllTicketVmDto>()
+                .ForMember(dest => dest.TicketPriorityVm, opt => opt.MapFrom(src => src.TicketPriority)); ;
         }
     }
 }

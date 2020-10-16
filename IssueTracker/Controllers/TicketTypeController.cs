@@ -26,7 +26,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket(TicketType type)
+        public async Task<IActionResult> CreateTicketType(TicketType type)
         {
             if (type == null)
             {
@@ -39,7 +39,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTicket(Guid id)
+        public async Task<IActionResult> GetTicketType(Guid id)
         {
             if (id == null)
             {

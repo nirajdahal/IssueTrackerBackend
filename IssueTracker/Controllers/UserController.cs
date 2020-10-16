@@ -59,6 +59,8 @@ namespace IssueTracker.Controllers
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim("UserID", user.Id.ToString()),
+                        new Claim("UserName", user.Name.ToString()),
+                        new Claim("UserEmail", user.Email.ToString()),
                         new Claim(ClaimTypes.Role, userRole.FirstOrDefault())
                     }),
                     Expires = DateTime.UtcNow.AddDays(1),

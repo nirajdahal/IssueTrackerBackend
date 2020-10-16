@@ -7,6 +7,7 @@ using Library.Entities.Models.UsersTickets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,16 @@ namespace IssueTracker.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllTickets()
+        {
+            var tickets = await _repo.Ticket.GetAllTickets();
+            var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
+            return Ok(ticketsVm);
+        }
+
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateTicket(TicketForCreationDto ticket)
         {
             if (ticket == null)
@@ -43,15 +53,20 @@ namespace IssueTracker.Controllers
                 return UnprocessableEntity(ModelState);
             }
             ticket.TStatusId = new Guid("256097cd-4147-4c73-6355-08d86f48d2ba");
+
             var ticketToCreate = _mapper.Map<Ticket>(ticket);
 
+            //Getting the username and email from jwt token to set it to CreatedBy name and email
+            var userName = User.Claims.ToList()[1].Value;
+            var userEmail = User.Claims.ToList()[2].Value;
+            ticketToCreate.SubmittedByName = userName;
+            ticketToCreate.SubmittedByEmail = userEmail;
             ticketToCreate.CreatedAt = DateTime.Now;
             _repo.Ticket.CreateTicket(ticketToCreate);
             await _repo.Save();
             return Ok("Ticket Created Sucessfully");
         }
 
-        //string userId = User.Claims.ToList()[0].Value;
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateTicket(Guid id, [FromBody] TicketForUpdateDto ticketToUpdate)
@@ -73,13 +88,28 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid ticket id");
                 return BadRequest("The ticket that you are trying to update doesnot exist");
             }
+
             //updating the database so the previous record gets deleted in database
             var usersticketToBeRemoved = _context.Set<UserTicket>().Where(x => (x.TicketId.Equals(id)));
             _context.Set<UserTicket>().RemoveRange(usersticketToBeRemoved);
             await _context.SaveChangesAsync();
 
+            //Getting the username and email from jwt token to set it to created by name and email
+            var userName = User.Claims.ToList()[1].Value;
+            var userEmail = User.Claims.ToList()[2].Value;
+
+            ticketToUpdate.UpdatedByName = userName;
+            ticketToUpdate.UpdatedByEmail = userEmail;
+
+            //Assigning previous submitted by value because the submitter name will get deleted when we apply put method
+            //And dont have to use  this kind of trick for patch request but patch is little hard to implement
+            var submmiteByName = originalTicket.SubmittedByName;
+            var submittedByEmail = originalTicket.SubmittedByEmail;
+            ticketToUpdate.SubmittedByName = submmiteByName;
+            ticketToUpdate.SubmittedByEmail = submittedByEmail;
             //now updating data
             _mapper.Map(ticketToUpdate, originalTicket);
+
             await _repo.Save();
 
             return Ok("Ticket Updated Sucessfully");

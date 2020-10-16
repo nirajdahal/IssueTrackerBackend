@@ -1,23 +1,17 @@
 ﻿using Library.Entities.Models.Projects;
+using Library.Entities.Models.Tickets;
 using Library.Entities.Models.UsersTickets;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Library.Entities.Models.Tickets
+namespace Library.Entities.DTO.TicketDto
 {
-    public class Ticket
+    public class GetAllTicketVmDto
     {
-        [Column("TicketId")]
         public Guid Id { get; set; }
 
-        [Required]
-        [MaxLength(60, ErrorMessage = "Maximum length for the Title is 60 characters.")]
         public string Title { get; set; }
 
-        [Required]
-        [MaxLength(160, ErrorMessage = "Maximum length for the Description is 160 characters.")]
         public string Description { get; set; }
 
         public string UpdatedByName { get; set; }
@@ -28,23 +22,13 @@ namespace Library.Entities.Models.Tickets
 
         public ICollection<TicketComment> Comments { get; set; }
 
-        [ForeignKey(nameof(TicketType))]
         public Guid TTypeId { get; set; }
 
         public TicketType TicketType { get; set; }
 
-        [ForeignKey(nameof(TicketStatus))]
-        public Guid TStatusId { get; set; }
-
         public TicketStatus TicketStatus { get; set; }
 
-        [ForeignKey(nameof(TicketPriority))]
-        public Guid TPriorityId { get; set; }
-
-        public TicketPriority TicketPriority { get; set; }
-
-        [ForeignKey(nameof(Project))]
-        public Guid ProjectId { get; set; }
+        public TicketPriorityVmDto TicketPriorityVm { get; set; }
 
         public Project Project { get; set; }
 

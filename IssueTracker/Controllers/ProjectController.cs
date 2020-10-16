@@ -59,7 +59,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet(("{id}"))]
-        public async Task<IActionResult> UpdateProject(Guid id)
+        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectForUpdateDto projectToUpdate)
         {
             var project = await _repo.Project.GetProject(id);
             return Ok(project);

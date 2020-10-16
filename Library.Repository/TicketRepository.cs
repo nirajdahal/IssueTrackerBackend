@@ -27,7 +27,8 @@ namespace Library.Repository
 
         public async Task<IEnumerable<Ticket>> GetAllTickets()
         {
-            var tickets = await FindAll().OrderBy(t => t.Title).ToListAsync();
+            var tickets = await FindAll().OrderBy(t => t.Title)
+                .Include(x => x.TicketPriority).ToListAsync();
             return tickets;
         }
 

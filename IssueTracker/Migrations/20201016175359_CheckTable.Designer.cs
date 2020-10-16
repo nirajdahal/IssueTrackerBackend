@@ -4,14 +4,16 @@ using Library.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20201016175359_CheckTable")]
+    partial class CheckTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,11 +62,8 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SubmittedByEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubmittedByName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SubmittedById")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("TPriorityId")
                         .HasColumnType("uniqueidentifier");
@@ -83,21 +82,22 @@ namespace IssueTracker.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedByEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedByName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UpdatedById")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("SubmittedById");
 
                     b.HasIndex("TPriorityId");
 
                     b.HasIndex("TStatusId");
 
                     b.HasIndex("TTypeId");
+
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("Tickets");
                 });
@@ -423,6 +423,10 @@ namespace IssueTracker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "SubmittedBy")
+                        .WithMany()
+                        .HasForeignKey("SubmittedById");
+
                     b.HasOne("Library.Entities.Models.Tickets.TicketPriority", "TicketPriority")
                         .WithMany("Ticket")
                         .HasForeignKey("TPriorityId")
@@ -440,6 +444,10 @@ namespace IssueTracker.Migrations
                         .HasForeignKey("TTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
