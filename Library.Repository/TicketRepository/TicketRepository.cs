@@ -38,7 +38,12 @@ namespace Library.Repository
 
         public async Task<Ticket> GetTicket(Guid ticketId)
         {
-            var tickets = await FindByCondition(t => t.Id.Equals(ticketId)).SingleOrDefaultAsync();
+            var tickets = await FindByCondition(t => t.Id.Equals(ticketId))
+                .Include(x => x.TicketPriority)
+                .Include(x => x.TicketType)
+                .Include(x => x.UsersTickets)
+                .Include(x => x.Project)
+                .Include(x => x.TicketStatus).SingleOrDefaultAsync();
             return tickets;
         }
 

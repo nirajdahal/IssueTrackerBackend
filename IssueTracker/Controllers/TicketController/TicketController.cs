@@ -58,6 +58,28 @@ namespace IssueTracker.Controllers
             return Ok(ticketsVm);
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetTicket(Guid id)
+        {
+            var tickets = await _repo.Ticket.GetTicket(id);
+            var ticketsVm = _mapper.Map<GetAllTicketVmDto>(tickets);
+
+            var userTicket = ticketsVm.UsersTicketsVm;
+
+            foreach (var user in userTicket)
+            {
+                var applicationUser = await _userManager.FindByIdAsync(user.Id);
+                var userRole = await _userManager.GetRolesAsync(applicationUser);
+                user.ApplicationUser = new ApplicationUserVm();
+                user.ApplicationUser.userEmail = applicationUser.Email;
+                user.ApplicationUser.userName = applicationUser.Name;
+                user.ApplicationUser.userRole = userRole.ToList();
+            }
+
+            return Ok(ticketsVm);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateTicket(TicketForCreationDto ticket)
@@ -133,6 +155,27 @@ namespace IssueTracker.Controllers
             await _repo.Save();
 
             return Ok("Ticket Updated Sucessfully");
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteTicket(Guid id)
+        {
+            if (id == null)
+            {
+                _logger.LogError("Ticket id  sent from client is null.");
+                return BadRequest("Empty Ticket Cannot Be Deleted");
+            }
+            var ticketExist = await _repo.Ticket.GetTicket(id);
+
+            if (ticketExist == null)
+            {
+                _logger.LogError("Invalid ticket id");
+                return BadRequest("The ticket that you are trying to delete doesnot exist");
+            }
+            _repo.Ticket.DeleteTicket(ticketExist);
+            await _repo.Save();
+            return Ok("Sucessfully Deleted Ticket");
         }
     }
 }
