@@ -14,6 +14,8 @@ namespace Library.Contracts
 
         ITicketPriorityRepository TicketPriority { get; }
 
+        IUserTicketRepository UserTicket { get; }
+
         Task Save();
     }
 }

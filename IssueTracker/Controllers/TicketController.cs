@@ -2,9 +2,11 @@
 using Library.Contracts;
 using Library.Entities;
 using Library.Entities.DTO.TicketDto;
+using Library.Entities.DTO.UserDto;
+using Library.Entities.Models;
 using Library.Entities.Models.Tickets;
-using Library.Entities.Models.UsersTickets;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,24 +19,42 @@ namespace IssueTracker.Controllers
     [ApiController]
     public class TicketController : ControllerBase
     {
-        private RepositoryContext _context;
         private ILoggerManager _logger;
         private IMapper _mapper;
+        private UserManager<ApplicationUser> _userManager;
         private IRepositoryManager _repo;
 
-        public TicketController(IRepositoryManager repo, ILoggerManager logger, IMapper mapper, RepositoryContext context)
+        public TicketController(UserManager<ApplicationUser> userManager, IRepositoryManager repo, ILoggerManager logger, IMapper mapper, RepositoryContext context)
         {
             _repo = repo;
             _logger = logger;
             _mapper = mapper;
-            _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllTickets()
         {
             var tickets = await _repo.Ticket.GetAllTickets();
-            var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
+
+            var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets).ToList();
+
+            foreach (var userTickets in ticketsVm)
+            {
+                var userTicket = userTickets.UsersTicketsVm;
+
+                foreach (var user in userTicket)
+                {
+                    var applicationUser = await _userManager.FindByIdAsync(user.Id);
+                    var userRole = await _userManager.GetRolesAsync(applicationUser);
+                    user.ApplicationUser = new ApplicationUserVm();
+                    user.ApplicationUser.userEmail = applicationUser.Email;
+                    user.ApplicationUser.userName = applicationUser.Name;
+                    user.ApplicationUser.userRole = userRole.ToList();
+                }
+            }
+
             return Ok(ticketsVm);
         }
 
@@ -90,9 +110,9 @@ namespace IssueTracker.Controllers
             }
 
             //updating the database so the previous record gets deleted in database
-            var usersticketToBeRemoved = _context.Set<UserTicket>().Where(x => (x.TicketId.Equals(id)));
-            _context.Set<UserTicket>().RemoveRange(usersticketToBeRemoved);
-            await _context.SaveChangesAsync();
+            var usersticketToBeRemoved = await _repo.UserTicket.GetUserTicket(id);
+            _repo.UserTicket.RemoveTicketAndUser(usersticketToBeRemoved);
+            await _repo.Save();
 
             //Getting the username and email from jwt token to set it to created by name and email
             var userName = User.Claims.ToList()[1].Value;

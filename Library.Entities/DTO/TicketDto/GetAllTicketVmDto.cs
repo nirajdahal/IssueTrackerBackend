@@ -1,4 +1,6 @@
-﻿using Library.Entities.Models.Projects;
+﻿using Library.Entities.DTO.ProjectDto;
+using Library.Entities.DTO.UsersTicketsDto;
+using Library.Entities.Models.Projects;
 using Library.Entities.Models.Tickets;
 using Library.Entities.Models.UsersTickets;
 using System;
@@ -20,19 +22,15 @@ namespace Library.Entities.DTO.TicketDto
         public string SubmittedByName { get; set; }
         public string SubmittedByEmail { get; set; }
 
-        public ICollection<TicketComment> Comments { get; set; }
+        public TicketTypeVmDto TicketTypeVm { get; set; }
 
-        public Guid TTypeId { get; set; }
-
-        public TicketType TicketType { get; set; }
-
-        public TicketStatus TicketStatus { get; set; }
+        public TicketStatusVmDto TicketStatusVm { get; set; }
 
         public TicketPriorityVmDto TicketPriorityVm { get; set; }
 
-        public Project Project { get; set; }
+        public ProjectForTicketDto ProjectVm { get; set; }
 
-        public ICollection<UserTicket> UsersTickets { get; set; }
+        public ICollection<UserTicketVmDto> UsersTicketsVm { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

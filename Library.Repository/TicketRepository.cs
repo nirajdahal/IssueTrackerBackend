@@ -28,7 +28,11 @@ namespace Library.Repository
         public async Task<IEnumerable<Ticket>> GetAllTickets()
         {
             var tickets = await FindAll().OrderBy(t => t.Title)
-                .Include(x => x.TicketPriority).ToListAsync();
+                .Include(x => x.TicketPriority)
+                .Include(x => x.TicketType)
+                .Include(x => x.UsersTickets)
+                .Include(x => x.Project)
+                .Include(x => x.TicketStatus).ToListAsync();
             return tickets;
         }
 
@@ -42,10 +46,5 @@ namespace Library.Repository
         {
             Update(ticket);
         }
-
-        //public Task<IEnumerable<Ticket>> GetTicketByIds(IEnumerable<Guid> ids)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Library.Entities.Models.UsersTickets
 {
     public class UserTicket
+
     {
         [ForeignKey(nameof(Ticket))]
         public Guid TicketId { get; set; }

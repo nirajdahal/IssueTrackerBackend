@@ -12,6 +12,7 @@ namespace Library.Repository
         private ITicketTypeRepository _ticketTypeRepository;
         private ITicketStatusRepository _ticketStatusRepository;
         private ITicketPriorityRepository _ticketPriorityRepository;
+        private IUserTicketRepository _userTicketRepository;
 
         public RepositoryManager(RepositoryContext context)
         {
@@ -76,6 +77,18 @@ namespace Library.Repository
                     _ticketPriorityRepository = new TicketPriorityRepository(_context);
                 }
                 return _ticketPriorityRepository;
+            }
+        }
+
+        public IUserTicketRepository UserTicket
+        {
+            get
+            {
+                if (_userTicketRepository == null)
+                {
+                    _userTicketRepository = new UserTicketRepository(_context);
+                }
+                return _userTicketRepository;
             }
         }
 

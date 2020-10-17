@@ -11,7 +11,6 @@ namespace Library.Entities.Models
         public string Name { get; set; }
         public ICollection<UserProject> UsersProjects { get; set; }
         public ICollection<UserTicket> UsersTickets { get; set; }
-
         public ICollection<TicketComment> TicketComments { get; set; }
     }
 }
