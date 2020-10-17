@@ -1,8 +1,5 @@
 ﻿using Library.Entities.DTO.ProjectDto;
 using Library.Entities.DTO.UsersTicketsDto;
-using Library.Entities.Models.Projects;
-using Library.Entities.Models.Tickets;
-using Library.Entities.Models.UsersTickets;
 using System;
 using System.Collections.Generic;
 

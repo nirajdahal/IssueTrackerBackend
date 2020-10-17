@@ -1,8 +1,4 @@
 ﻿using Library.Entities.DTO.UserDto;
-using Library.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Library.Entities.DTO.UsersTicketsDto
 {

@@ -17,7 +17,13 @@ namespace IssueTracker
         {
             CreateMap<RegisterModelDto, RegisterModel>();
             CreateMap<LoginModelDto, LoginModel>();
-            CreateMap<ApplicationUser, ApplicationUserVm>();
+            CreateMap<ApplicationUser, ApplicationUserVm>()
+                .ForMember(dest => dest.userEmail, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.Name))
+            ;
+
+            CreateMap<UserTicket, TicketsOfUsersDto>()
+               .ForMember(dest => dest.TicketVm, opt => opt.MapFrom(src => src.Ticket));
 
             //Ticket Dtos
             CreateMap<TicketForCreationDto, Ticket>()
@@ -29,7 +35,8 @@ namespace IssueTracker
             CreateMap<TicketPriority, TicketPriorityVmDto>();
             CreateMap<TicketStatus, TicketStatusVmDto>();
             CreateMap<TicketType, TicketTypeVmDto>();
-            CreateMap<UserTicket, UserTicketVmDto>();
+            CreateMap<UserTicket, UserTicketVmDto>().ReverseMap();
+
             CreateMap<Project, ProjectForTicketDto>();
 
             CreateMap<Ticket, GetAllTicketVmDto>()

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using Library.Contracts;
 using Library.Entities;
 using Library.Entities.DTO.TicketDto;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +40,7 @@ namespace IssueTracker.Controllers
         {
             var tickets = await _repo.Ticket.GetAllTickets();
 
-            var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets).ToList();
+            var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets).ToList().Where(x => x.UsersTicketsVm.Any(x => x.Id == ""));
 
             foreach (var userTickets in ticketsVm)
             {

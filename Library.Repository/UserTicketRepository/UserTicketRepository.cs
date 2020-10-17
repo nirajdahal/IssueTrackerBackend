@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Repository
@@ -26,9 +25,12 @@ namespace Library.Repository
             Delete(userTicket);
         }
 
-        public async Task<IEnumerable<UserTicket>> GetAllUserTicket()
+        public async Task<IEnumerable<UserTicket>> GetAllTicketsForUser(string id)
         {
-            var ticketsTypes = await FindAll().Include(x => x.ApplicationUser).ToListAsync();
+            var ticketsTypes = await FindByCondition(x => x.Id.Equals(id))
+                .Include(x => x.Ticket)
+                .Include(x => x.ApplicationUser)
+                .ToListAsync();
             return ticketsTypes;
         }
 
