@@ -27,7 +27,7 @@ namespace Library.Repository
 
         public async Task<IEnumerable<Project>> GetAllProjects()
         {
-            var projects = await FindAll().OrderBy(p => p.Title).ToListAsync();
+            var projects = await FindAll().OrderBy(p => p.Title).Include(x => x.Ticket).Include(x => x.UsersProjects).ToListAsync();
             return projects;
         }
 
@@ -41,10 +41,5 @@ namespace Library.Repository
         {
             Update(project);
         }
-
-        //public Task<IEnumerable<Project>> GetProjectByIds(IEnumerable<Guid> ids)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

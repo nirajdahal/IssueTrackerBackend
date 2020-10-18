@@ -1,4 +1,5 @@
 ﻿using Library.Contracts;
+using Library.Contracts.UserProjectContracts;
 using Library.Entities;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace Library.Repository
         private ITicketStatusRepository _ticketStatusRepository;
         private ITicketPriorityRepository _ticketPriorityRepository;
         private IUserTicketRepository _userTicketRepository;
+        private IUserProjectRepository _userProjectRepository;
 
         public RepositoryManager(RepositoryContext context)
         {
@@ -89,6 +91,18 @@ namespace Library.Repository
                     _userTicketRepository = new UserTicketRepository(_context);
                 }
                 return _userTicketRepository;
+            }
+        }
+
+        public IUserProjectRepository UserProject
+        {
+            get
+            {
+                if (_userProjectRepository == null)
+                {
+                    _userProjectRepository = new UserProjectRepository(_context);
+                }
+                return _userProjectRepository;
             }
         }
 

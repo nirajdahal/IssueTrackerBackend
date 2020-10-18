@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Library.Contracts.UserProjectContracts;
+using System.Threading.Tasks;
 
 namespace Library.Contracts
 {
@@ -15,6 +16,7 @@ namespace Library.Contracts
         ITicketPriorityRepository TicketPriority { get; }
 
         IUserTicketRepository UserTicket { get; }
+        IUserProjectRepository UserProject { get; }
 
         Task Save();
     }

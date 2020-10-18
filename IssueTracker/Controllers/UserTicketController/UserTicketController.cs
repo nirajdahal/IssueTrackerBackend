@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
-using AutoMapper.Internal;
 using Library.Contracts;
 using Library.Entities.DTO.TicketDto;
-using Library.Entities.DTO.UsersTicketsDto;
 using Library.Entities.Models;
-using Library.Entities.Models.UsersTickets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,6 +32,9 @@ namespace IssueTracker.Controllers
         [Authorize]
         public async Task<IActionResult> GetTicketForUser(string id)
         {
+            if (id == null)
+            {
+            }
             var tickets = await _repo.Ticket.GetAllTickets();
 
             var xy = await _userManager.FindByIdAsync(id);
