@@ -17,6 +17,7 @@ namespace Library.Entities.DTO.TicketDto
         public string UpdatedByEmail { get; set; }
 
         public string SubmittedByName { get; set; }
+
         public string SubmittedByEmail { get; set; }
 
         public TicketTypeVmDto TicketTypeVm { get; set; }

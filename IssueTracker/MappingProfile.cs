@@ -3,10 +3,12 @@ using Library.Entities.DTO;
 using Library.Entities.DTO.ProjectDto;
 using Library.Entities.DTO.TicketDto;
 using Library.Entities.DTO.UserDto;
+using Library.Entities.DTO.UserProjectsDto;
 using Library.Entities.DTO.UsersTicketsDto;
 using Library.Entities.Models;
 using Library.Entities.Models.Projects;
 using Library.Entities.Models.Tickets;
+using Library.Entities.Models.UsersProjects;
 using Library.Entities.Models.UsersTickets;
 
 namespace IssueTracker
@@ -35,9 +37,7 @@ namespace IssueTracker
             CreateMap<TicketStatus, TicketStatusVmDto>();
             CreateMap<TicketType, TicketTypeVmDto>();
             CreateMap<UserTicket, UserTicketVmDto>().ReverseMap();
-
             CreateMap<Project, ProjectForTicketDto>();
-
             CreateMap<Ticket, GetAllTicketVmDto>()
                 .ForMember(dest => dest.TicketPriorityVm, opt => opt.MapFrom(src => src.TicketPriority))
                 .ForMember(dest => dest.TicketStatusVm, opt => opt.MapFrom(src => src.TicketStatus))
@@ -45,7 +45,12 @@ namespace IssueTracker
                 .ForMember(dest => dest.ProjectVm, opt => opt.MapFrom(src => src.Project))
                 .ForMember(dest => dest.UsersTicketsVm, opt => opt.MapFrom(src => src.UsersTickets));
 
+            //Project Dto
             CreateMap<ProjectForCreation, Project>();
+            CreateMap<ProjectForUpdateDto, Project>();
+            CreateMap<Ticket, TicketForProjectDto>();
+            CreateMap<UserProject, UserProjectVmDto>().ReverseMap();
+            CreateMap<Project, ProjectDto>().ForMember(dest => dest.TicketVm, opt => opt.MapFrom(src => src.Ticket));
         }
     }
 }

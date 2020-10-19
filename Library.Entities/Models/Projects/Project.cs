@@ -19,6 +19,12 @@ namespace Library.Entities.Models.Projects
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdateAt { get; set; }
+        public string SubmittedByName { get; set; }
+        public string SubmittedByEmail { get; set; }
+
+        public string UpdatedByName { get; set; }
+        public string UpdatedByEmail { get; set; }
         public ICollection<Ticket> Ticket { get; set; }//ticket1, ticket2
         public ICollection<UserProject> UsersProjects { get; set; } // niraj, nirjala - delete niraj, nirjala, tulshi, bhagwati
     }

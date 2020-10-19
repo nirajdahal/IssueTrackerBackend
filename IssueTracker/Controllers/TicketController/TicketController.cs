@@ -40,6 +40,9 @@ namespace IssueTracker.Controllers
 
             var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
 
+            //We only get user id from the application user
+            //so we need to find the user by that id and
+            //populate the user value to application user
             foreach (var userTickets in ticketsVm)
             {
                 var userTicket = userTickets.UsersTicketsVm;
@@ -63,6 +66,12 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> GetTicket(Guid id)
         {
             var tickets = await _repo.Ticket.GetTicket(id);
+
+            if (tickets == null)
+            {
+                _logger.LogError("Ticket object sent from client is null.");
+                return BadRequest("Ticket You Are Trying To Create Doesnot Exist");
+            }
             var ticketsVm = _mapper.Map<GetAllTicketVmDto>(tickets);
 
             var userTicket = ticketsVm.UsersTicketsVm;
@@ -149,6 +158,7 @@ namespace IssueTracker.Controllers
             var submittedByEmail = originalTicket.SubmittedByEmail;
             ticketToUpdate.SubmittedByName = submmiteByName;
             ticketToUpdate.SubmittedByEmail = submittedByEmail;
+            ticketToUpdate.UpdatedAt = DateTime.Now;
             //now updating data
             _mapper.Map(ticketToUpdate, originalTicket);
 
