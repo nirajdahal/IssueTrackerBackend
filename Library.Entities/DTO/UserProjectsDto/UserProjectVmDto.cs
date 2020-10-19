@@ -1,7 +1,4 @@
 ﻿using Library.Entities.DTO.UserDto;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Library.Entities.DTO.UserProjectsDto
 {
