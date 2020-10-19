@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Library.Contracts;
 using Library.Entities;
+using Library.Entities.DTO.TicketDto;
 using Library.Entities.Models.Tickets;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers
@@ -48,6 +52,14 @@ namespace IssueTracker.Controllers
             }
             var ticket = await _repo.TicketType.GetTicketType(id);
             return Ok(ticket);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllTicketTypes()
+        {
+            var ticketTypes = await _repo.TicketType.GetAllTicketType();
+            var ticketTypeToReturn = _mapper.Map<IEnumerable<TicketTypeVmDto>>(ticketTypes);
+            return Ok(ticketTypeToReturn);
         }
     }
 }

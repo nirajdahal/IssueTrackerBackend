@@ -3,11 +3,13 @@ using Library.Contracts;
 using Library.Entities.DTO;
 using Library.Entities.Enums;
 using Library.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -50,10 +52,19 @@ namespace IssueTracker.Controllers
                 return UnprocessableEntity(ModelState);
             }
             var user = await _userManager.FindByNameAsync(model.Email);
+            if (user == null)
+            {
+                return BadRequest("Empty User Cannot Be Logged In");
+            }
+
+            var userRole = await _userManager.GetRolesAsync(user);
+            var userRoles = new List<string> { "Admin", "Submitter", "Project Manager" };
+            if (!(userRoles.Contains(userRole.ToString())))
+            {
+                return Unauthorized("Unauthorized");
+            }
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                //get current role for the user
-                var userRole = await _userManager.GetRolesAsync(user);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]

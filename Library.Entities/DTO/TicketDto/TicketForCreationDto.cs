@@ -21,7 +21,5 @@ namespace Library.Entities.DTO.TicketDto
         public Guid TStatusId { get; set; }
 
         public Guid ProjectId { get; set; }
-
-        public ApplicationUser SubmittedBy { get; set; }
     }
 }

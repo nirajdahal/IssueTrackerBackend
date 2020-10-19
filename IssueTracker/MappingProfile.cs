@@ -35,7 +35,8 @@ namespace IssueTracker
             CreateMap<TicketForUpdateDto, Ticket>();
             CreateMap<TicketPriority, TicketPriorityVmDto>();
             CreateMap<TicketStatus, TicketStatusVmDto>();
-            CreateMap<TicketType, TicketTypeVmDto>();
+            CreateMap<TicketType, TicketTypeVmDto>()
+                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
             CreateMap<UserTicket, UserTicketVmDto>().ReverseMap();
             CreateMap<Project, ProjectForTicketDto>();
             CreateMap<Ticket, GetAllTicketVmDto>()
