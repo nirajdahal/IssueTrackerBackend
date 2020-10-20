@@ -60,11 +60,18 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Submitter")]
         public async Task<IActionResult> GetAllProjects()
         {
             var projects = await _repo.Project.GetAllProjects();
             var projectToReturn = _mapper.Map<IEnumerable<ProjectDto>>(projects);
+            return Ok(projectToReturn);
+        }
+
+        [HttpGet("idname")]
+        public async Task<IActionResult> GetProjectsIdName()
+        {
+            var projects = await _repo.Project.GetAllProjects();
+            var projectToReturn = _mapper.Map<IEnumerable<ProjectIdNameVm>>(projects);
             return Ok(projectToReturn);
         }
 

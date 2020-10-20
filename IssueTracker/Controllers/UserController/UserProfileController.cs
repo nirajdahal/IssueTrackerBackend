@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,7 +23,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles ="Admin, Submitter")]
+        [Authorize(Roles = "Admin, Submitter")]
         //GET : /api/profile
         public async Task<Object> GetUserProfile()
         {

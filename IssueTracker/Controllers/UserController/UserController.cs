@@ -59,10 +59,16 @@ namespace IssueTracker.Controllers
 
             var userRole = await _userManager.GetRolesAsync(user);
             var userRoles = new List<string> { "Admin", "Submitter", "Project Manager" };
-            if (!(userRoles.Contains(userRole.ToString())))
+
+            foreach (var role in userRole)
             {
-                return Unauthorized("Unauthorized");
+                var conditionForAuthority = userRoles.Contains(role.ToString());
+                if (!conditionForAuthority)
+                {
+                    return Unauthorized("Unauthorized");
+                }
             }
+
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var tokenDescriptor = new SecurityTokenDescriptor

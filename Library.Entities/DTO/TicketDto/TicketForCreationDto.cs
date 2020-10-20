@@ -14,12 +14,12 @@ namespace Library.Entities.DTO.TicketDto
         [MaxLength(160, ErrorMessage = "Maximum length for the Description is 160 characters.")]
         public string Description { get; set; }
 
-        public Guid TTypeId { get; set; }
+        public string TTypeId { get; set; }
 
-        public Guid TPriorityId { get; set; }
+        public string TPriorityId { get; set; }
 
         public Guid TStatusId { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
     }
 }
