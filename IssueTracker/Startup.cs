@@ -7,8 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using NLog;
+using System.Diagnostics.Contracts;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace IssueTracker
 {
@@ -39,7 +42,12 @@ namespace IssueTracker
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
-            }).AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            }).AddNewtonsoftJson(x =>
+            {
+                x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                x.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            }
+            );
             services.ConfigureRepositiryManager();
             services.Configure<ApiBehaviorOptions>(options =>
             {

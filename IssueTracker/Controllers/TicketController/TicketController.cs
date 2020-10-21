@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IssueTracker.ApiHelper;
 using Library.Contracts;
 using Library.Entities;
 using Library.Entities.DTO.TicketDto;
@@ -135,15 +136,23 @@ namespace IssueTracker.Controllers
             }
 
             var originalTicket = await _repo.Ticket.GetTicket(id);
+
             if (originalTicket == null)
             {
                 _logger.LogError("Invalid ticket id");
                 return BadRequest("The ticket that you are trying to update doesnot exist");
             }
 
+            //getting usertickets from database
+            var usersticketFromDatabase = await _repo.UserTicket.GetUserTicket(id);
+            var isOwner = CheckTicketOwner.IsTicketOwner(User, usersticketFromDatabase);
+            if (!isOwner)
+            {
+                return Unauthorized("Sorry! You cannot modify this ticket.");
+            }
+
             //updating the database so the previous record gets deleted in database
-            var usersticketToBeRemoved = await _repo.UserTicket.GetUserTicket(id);
-            _repo.UserTicket.RemoveTicketAndUser(usersticketToBeRemoved);
+            _repo.UserTicket.RemoveTicketAndUser(usersticketFromDatabase);
             await _repo.Save();
 
             //Getting the username and email from jwt token to set it to created by name and email
@@ -184,6 +193,15 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid ticket id");
                 return BadRequest("The ticket that you are trying to delete doesnot exist");
             }
+
+            var usersticketFromDatabase = await _repo.UserTicket.GetUserTicket(id);
+
+            var isOwner = CheckTicketOwner.IsTicketOwner(User, usersticketFromDatabase);
+            if (!isOwner)
+            {
+                return Unauthorized("Sorry! You cannot modify this ticket");
+            }
+
             _repo.Ticket.DeleteTicket(ticketExist);
             await _repo.Save();
             return Ok("Sucessfully Deleted Ticket");

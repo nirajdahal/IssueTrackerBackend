@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IssueTracker.ApiHelper;
 using Library.Contracts;
 using Library.Entities.DTO.ProjectDto;
 using Library.Entities.DTO.UserDto;
@@ -168,15 +169,22 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid project id");
                 return BadRequest("The project that you are trying to update doesnot exist");
             }
-            //tracking previous records because to update the project we need these information
-            var user = await _repo.UserProject.GetUserProject(id);
+
+            var userProject = await _repo.UserProject.GetUserProject(id);
+
+            //check for owner
+            var isOwner = CheckProjectOwner.IsProjectOwner(User, userProject);
+            if (!isOwner)
+            {
+                return Unauthorized("Sorry! You cannot modify this project.");
+            }
+
             var submittedByName = originalproject.SubmittedByName;
             var submittedByEmail = originalproject.SubmittedByEmail;
             var createdAt = originalproject.CreatedAt;
 
             //Remove previous UserProject from database
 
-            var userProject = await _repo.UserProject.GetUserProject(id);
             if (userProject != null)
             {
                 _repo.UserProject.RemoveProjectAndUser(userProject);
@@ -188,7 +196,7 @@ namespace IssueTracker.Controllers
             finalprojectToUpdate.SubmittedByEmail = submittedByEmail;
             finalprojectToUpdate.SubmittedByName = submittedByName;
             finalprojectToUpdate.CreatedAt = createdAt;
-            finalprojectToUpdate.UsersProjects = user.ToList();
+            finalprojectToUpdate.UsersProjects = userProject.ToList();
             _repo.Project.UpdateProject(finalprojectToUpdate);
             await _repo.Save();
             return Ok("Project Created Sucessfully");
@@ -208,6 +216,15 @@ namespace IssueTracker.Controllers
             {
                 _logger.LogError("Invalid ticket id");
                 return BadRequest("The ticket that you are trying to update doesnot exist");
+            }
+
+            var userProject = await _repo.UserProject.GetUserProject(id);
+
+            //check for owner
+            var isOwner = CheckProjectOwner.IsProjectOwner(User, userProject);
+            if (!isOwner)
+            {
+                return Unauthorized("Sorry! You cannot modify this project.");
             }
             _repo.Project.DeleteProject(projectToDelete);
             await _repo.Save();
