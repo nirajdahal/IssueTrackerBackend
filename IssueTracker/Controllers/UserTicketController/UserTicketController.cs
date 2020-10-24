@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Library.Contracts;
 using Library.Entities.DTO.TicketDto;
+using Library.Entities.DTO.UserDto;
 using Library.Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,19 +36,39 @@ namespace IssueTracker.Controllers
         {
             if (id == null)
             {
+                _logger.LogError("Ticket id  sent from client is null.");
+                return BadRequest("Ticket doesnot exist");
             }
-            var tickets = await _repo.Ticket.GetAllTickets();
 
-            var xy = await _userManager.FindByIdAsync(id);
+            /* adding this code will help us get Application User in the
+               code var user = await _repo.UserTicket.GetAllTicketsForUser(id);
+               research about it why this is showing this behaviour as we can change the
+               similar code in ticket and project as well
+             */
+            var userstickets = await _repo.UserTicket.GetAllTicketsForUser(id);
 
-            if (xy.UsersTickets != null)
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user.UsersTickets != null)
             {
-                var xyz = xy.UsersTickets.Select(x => x.Ticket).ToList();
-                var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(xyz);
+                var userTickets = user.UsersTickets.Select(x => x.Ticket).ToList();
+                var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(userTickets);
+                foreach (var users in ticketsVm)
+                {
+                    foreach (var userwithTicket in users.UsersTicketsVm)
+                    {
+                        var userVm = new ApplicationUser();
+                        userVm.Id = userwithTicket.Id;
+                        var userRoleD = await _userManager.GetRolesAsync(userVm);
+                        //Adding user Role
+                        userwithTicket.ApplicationUser.userRole = userRoleD.ToList();
+                    }
+                }
                 return Ok(ticketsVm);
             }
             else
             {
+                _logger.LogError("Invalid ticket id");
                 return BadRequest();
             }
         }

@@ -41,6 +41,14 @@ namespace Library.Repository
             return ticketType;
         }
 
+        public async Task<IEnumerable<UserTicket>> GetUsersTickets()
+        {
+            var userTickets = await FindAll()
+                .Include(x => x.ApplicationUser)
+                .ToListAsync();
+            return userTickets;
+        }
+
         public void UpdateUserTicket(UserTicket userTicket)
         {
             Update(userTicket);

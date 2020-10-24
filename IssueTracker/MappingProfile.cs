@@ -20,6 +20,7 @@ namespace IssueTracker
             CreateMap<RegisterModelDto, RegisterModel>();
             CreateMap<LoginModelDto, LoginModel>();
             CreateMap<ApplicationUser, ApplicationUserVm>()
+
                 .ForMember(dest => dest.userEmail, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.Name));
 

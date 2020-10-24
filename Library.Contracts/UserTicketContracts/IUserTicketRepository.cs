@@ -18,5 +18,7 @@ namespace Library.Contracts
         void UpdateUserTicket(UserTicket userTicket);
 
         void RemoveTicketAndUser(IEnumerable<UserTicket> userTickets);
+
+        Task<IEnumerable<UserTicket>> GetUsersTickets();
     }
 }
