@@ -27,13 +27,21 @@ namespace Library.Repository
 
         public async Task<IEnumerable<Project>> GetAllProjects()
         {
-            var projects = await FindAll().OrderBy(p => p.Title).Include(x => x.Ticket).Include(x => x.UsersProjects).ToListAsync();
+            var projects = await FindAll().OrderBy(p => p.Title)
+                .Include(x => x.Ticket)
+                .Include(x => x.ProjectManagers)
+                .Include(x => x.UsersProjects)
+                .ToListAsync();
             return projects;
         }
 
         public async Task<Project> GetProject(Guid projectId)
         {
-            var projects = await FindByCondition(p => p.Id.Equals(projectId)).Include(p => p.Ticket).Include(x => x.UsersProjects).SingleOrDefaultAsync();
+            var projects = await FindByCondition(p => p.Id.Equals(projectId))
+                .Include(p => p.Ticket)
+                .Include(x => x.UsersProjects)
+                .Include(x => x.ProjectManagers)
+                .SingleOrDefaultAsync();
             return projects;
         }
 

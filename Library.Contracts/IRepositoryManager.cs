@@ -1,4 +1,5 @@
-﻿using Library.Contracts.UserProjectContracts;
+﻿using Library.Contracts.ProjectManagerContracts;
+using Library.Contracts.UserProjectContracts;
 using System.Threading.Tasks;
 
 namespace Library.Contracts
@@ -17,6 +18,8 @@ namespace Library.Contracts
 
         IUserTicketRepository UserTicket { get; }
         IUserProjectRepository UserProject { get; }
+
+        IProjectManagerRepository ProjectManager { get; }
 
         Task Save();
     }

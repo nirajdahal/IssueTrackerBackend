@@ -1,15 +1,13 @@
 ﻿using Library.Entities.Models.UsersProjects;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace IssueTracker.ApiHelper
 {
     public class CheckProjectOwner
     {
-        public static bool IsProjectOwner(ClaimsPrincipal User, IEnumerable<UserProject> userProject)
+        public static bool IsProjectOwner(ClaimsPrincipal User, IEnumerable<ProjectManager> userProject)
         {
             string userId = User.Claims.ToList()[0].Value;
             string userRole = User.Claims.ToList()[3].Value;

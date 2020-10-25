@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Library.Entities.Models.UsersProjects;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Library.Entities.DTO.ProjectDto
 {
@@ -10,5 +12,7 @@ namespace Library.Entities.DTO.ProjectDto
         [Required]
         [MaxLength(160, ErrorMessage = "Maximum length for the Title is 160 characters.")]
         public string Description { get; set; }
+
+        public ICollection<ProjectManager> ProjectManagers; // get project managers using action method in user controller
     }
 }

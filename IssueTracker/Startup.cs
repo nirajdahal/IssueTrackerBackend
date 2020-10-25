@@ -9,9 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using NLog;
-using System.Diagnostics.Contracts;
 using System.IO;
-using System.Runtime.Serialization;
 
 namespace IssueTracker
 {

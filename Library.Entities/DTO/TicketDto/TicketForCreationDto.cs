@@ -1,5 +1,4 @@
-﻿using Library.Entities.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Library.Entities.DTO.TicketDto

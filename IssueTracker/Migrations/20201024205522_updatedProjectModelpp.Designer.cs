@@ -4,14 +4,16 @@ using Library.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20201024205522_updatedProjectModelpp")]
+    partial class updatedProjectModelpp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,29 +188,6 @@ namespace IssueTracker.Migrations
                     b.ToTable("TicketType");
                 });
 
-            modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
-                {
-                    b.Property<Guid>("projectManagerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnName("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("projectManagerId");
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectManager");
-                });
-
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.UserProject", b =>
                 {
                     b.Property<Guid>("ProjectId")
@@ -217,9 +196,6 @@ namespace IssueTracker.Migrations
                     b.Property<string>("Id")
                         .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("userProjectId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ProjectId", "Id");
 
@@ -495,21 +471,6 @@ namespace IssueTracker.Migrations
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("Comments")
                         .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
-                {
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("ProjectManagers")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.Projects.Project", "Project")
-                        .WithMany("ProjectManagers")
-                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -14,6 +14,7 @@ namespace Library.Entities.Models
 
         public ICollection<UserProject> UsersProjects { get; set; }
         public ICollection<UserTicket> UsersTickets { get; set; }
+        public ICollection<ProjectManager> ProjectManagers { get; set; }
         public ICollection<TicketComment> TicketComments { get; set; }
     }
 }

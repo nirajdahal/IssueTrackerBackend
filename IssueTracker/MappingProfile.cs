@@ -20,7 +20,6 @@ namespace IssueTracker
             CreateMap<RegisterModelDto, RegisterModel>();
             CreateMap<LoginModelDto, LoginModel>();
             CreateMap<ApplicationUser, ApplicationUserVm>()
-
                 .ForMember(dest => dest.userEmail, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.Name));
 
@@ -40,6 +39,8 @@ namespace IssueTracker
                  .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
             CreateMap<UserTicket, UserTicketVmDto>().ReverseMap();
             CreateMap<Project, ProjectForTicketDto>();
+
+            CreateMap<Ticket, UserTicketVmDto>();
             CreateMap<Ticket, GetAllTicketVmDto>()
                 .ForMember(dest => dest.TicketPriorityVm, opt => opt.MapFrom(src => src.TicketPriority))
                 .ForMember(dest => dest.TicketStatusVm, opt => opt.MapFrom(src => src.TicketStatus))
@@ -52,7 +53,13 @@ namespace IssueTracker
             CreateMap<ProjectForUpdateDto, Project>();
             CreateMap<Ticket, TicketForProjectDto>();
             CreateMap<UserProject, UserProjectVmDto>().ReverseMap();
-            CreateMap<Project, ProjectDto>().ForMember(dest => dest.TicketVm, opt => opt.MapFrom(src => src.Ticket));
+            CreateMap<ProjectManager, ProjectManagerVmDto>();
+            CreateMap<Project, ProjectDto>()
+                .ForMember(dest => dest.TicketVm, opt => opt.MapFrom(src => src.Ticket))
+                .ForMember(dest => dest.UsersProjects, opt => opt.MapFrom(src => src.UsersProjects))
+                .ForMember(dest => dest.ProjectManagers, opt => opt.MapFrom(src => src.ProjectManagers))
+                ;
+
             CreateMap<Project, ProjectIdNameVm>();
         }
     }

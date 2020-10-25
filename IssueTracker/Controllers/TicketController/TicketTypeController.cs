@@ -5,9 +5,7 @@ using Library.Entities.DTO.TicketDto;
 using Library.Entities.Models.Tickets;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers

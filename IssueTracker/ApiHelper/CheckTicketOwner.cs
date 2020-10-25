@@ -1,12 +1,8 @@
-﻿using Library.Entities.Models.UsersProjects;
-using Library.Entities.Models.UsersTickets;
+﻿using Library.Entities.Models.UsersTickets;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace IssueTracker.ApiHelper
 {

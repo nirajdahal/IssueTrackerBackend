@@ -26,6 +26,9 @@ namespace Library.Entities.Models.Projects
         public string UpdatedByName { get; set; }
         public string UpdatedByEmail { get; set; }
         public ICollection<Ticket> Ticket { get; set; }//ticket1, ticket2
+
+        public ICollection<ProjectManager> ProjectManagers { get; set; }
+
         public ICollection<UserProject> UsersProjects { get; set; } // niraj, nirjala - delete niraj, nirjala, tulshi, bhagwati
     }
 }

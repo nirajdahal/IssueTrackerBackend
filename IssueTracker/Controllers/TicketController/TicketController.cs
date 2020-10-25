@@ -38,7 +38,6 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> GetAllTickets()
         {
             var tickets = await _repo.Ticket.GetAllTickets();
-
             var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
 
             //We only get user id from the application user
@@ -143,8 +142,9 @@ namespace IssueTracker.Controllers
                 return BadRequest("The ticket that you are trying to update doesnot exist");
             }
 
-            //getting usertickets from database
+            //getting usertickets from database and check the owner
             var usersticketFromDatabase = await _repo.UserTicket.GetUserTicket(id);
+
             var isOwner = CheckTicketOwner.IsTicketOwner(User, usersticketFromDatabase);
             if (!isOwner)
             {

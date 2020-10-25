@@ -14,5 +14,6 @@ namespace Library.Entities.DTO.ProjectDto
         public DateTime CreatedAt { get; set; }
         public ICollection<TicketForProjectDto> TicketVm { get; set; }
         public ICollection<UserProjectVmDto> UsersProjects { get; set; }
+        public ICollection<ProjectManagerVmDto> ProjectManagers { get; set; }
     }
 }

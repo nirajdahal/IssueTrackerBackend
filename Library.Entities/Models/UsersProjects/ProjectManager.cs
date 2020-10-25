@@ -5,11 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Entities.Models.UsersProjects
 {
-    public class UserProject
-
+    public class ProjectManager
     {
         [Key]
-        public Guid userProjectId { get; set; }
+        public Guid projectManagerId { get; set; }
 
         [ForeignKey(nameof(Project))]
         public Guid ProjectId { get; set; }

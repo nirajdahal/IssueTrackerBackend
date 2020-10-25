@@ -48,7 +48,10 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid model state for the Project");
                 return UnprocessableEntity(ModelState);
             }
+
             var projectToCreate = _mapper.Map<Project>(project);
+            projectToCreate.Id = Guid.NewGuid();
+
             //Getting the username and email from jwt token to set it to CreatedBy name and email
             var userName = User.Claims.ToList()[1].Value;
             var userEmail = User.Claims.ToList()[2].Value;
@@ -63,6 +66,11 @@ namespace IssueTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
+            /* using this code var projectManagers = await _repo.ProjectManager.GetProjectManagers();
+             helps us to get project manager in this code var projects = await _repo.Project.GetAllProjects();
+             It is something to reasearch about why ef core shows this behaviour
+             */
+            var projectManagers = await _repo.ProjectManager.GetProjectManagers();
             var projects = await _repo.Project.GetAllProjects();
             var projectToReturn = _mapper.Map<IEnumerable<ProjectDto>>(projects);
             return Ok(projectToReturn);
@@ -86,7 +94,7 @@ namespace IssueTracker.Controllers
             }
 
             /*remove data with this project id from userproject because
-                we dont have any method which just updates the user project directly. For that we have to remove every
+            we dont have any method which just updates the user project directly. For that we have to remove every
             project user realtionship from userproject and add new one from looking at tickets
             */
             var userProjects = await _repo.UserProject.GetUserProject(id);
@@ -130,7 +138,6 @@ namespace IssueTracker.Controllers
                 _repo.UserProject.CreateUserProject(userProject);
                 await _repo.Save();
             }
-
             var project = await _repo.Project.GetProject(id);
 
             var projectToReturn = _mapper.Map<ProjectDto>(project);
@@ -170,10 +177,10 @@ namespace IssueTracker.Controllers
                 return BadRequest("The project that you are trying to update doesnot exist");
             }
 
-            var userProject = await _repo.UserProject.GetUserProject(id);
+            var projectManager = await _repo.ProjectManager.GetProjectManager(id);
 
             //check for owner
-            var isOwner = CheckProjectOwner.IsProjectOwner(User, userProject);
+            var isOwner = CheckProjectOwner.IsProjectOwner(User, projectManager);
             if (!isOwner)
             {
                 return Unauthorized("Sorry! You cannot modify this project.");
@@ -182,12 +189,21 @@ namespace IssueTracker.Controllers
             var submittedByName = originalproject.SubmittedByName;
             var submittedByEmail = originalproject.SubmittedByEmail;
             var createdAt = originalproject.CreatedAt;
+            var userProjects = originalproject.UsersProjects;
+
+            //Have to figure out a way to update many to many realtionship from anywhere otherwise like this
+            //the code will be much longer if we have
+            //Remove previous Project Manager from database
+            if (projectManager != null)
+            {
+                _repo.ProjectManager.RemoveProjectAndManager(projectManager);
+                await _repo.Save();
+            }
 
             //Remove previous UserProject from database
-
-            if (userProject != null)
+            if (userProjects != null)
             {
-                _repo.UserProject.RemoveProjectAndUser(userProject);
+                _repo.UserProject.RemoveProjectAndUser(userProjects);
                 await _repo.Save();
             }
 
@@ -196,10 +212,10 @@ namespace IssueTracker.Controllers
             finalprojectToUpdate.SubmittedByEmail = submittedByEmail;
             finalprojectToUpdate.SubmittedByName = submittedByName;
             finalprojectToUpdate.CreatedAt = createdAt;
-            finalprojectToUpdate.UsersProjects = userProject.ToList();
+            finalprojectToUpdate.UsersProjects = userProjects.ToList();
             _repo.Project.UpdateProject(finalprojectToUpdate);
             await _repo.Save();
-            return Ok("Project Created Sucessfully");
+            return Ok("Project Updated Sucessfully");
         }
 
         [HttpDelete(("{id}"))]
@@ -218,10 +234,10 @@ namespace IssueTracker.Controllers
                 return BadRequest("The ticket that you are trying to update doesnot exist");
             }
 
-            var userProject = await _repo.UserProject.GetUserProject(id);
+            var projectManager = await _repo.ProjectManager.GetProjectManager(id);
 
             //check for owner
-            var isOwner = CheckProjectOwner.IsProjectOwner(User, userProject);
+            var isOwner = CheckProjectOwner.IsProjectOwner(User, projectManager);
             if (!isOwner)
             {
                 return Unauthorized("Sorry! You cannot modify this project.");

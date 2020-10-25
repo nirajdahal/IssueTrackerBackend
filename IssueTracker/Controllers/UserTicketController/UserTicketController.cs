@@ -6,7 +6,6 @@ using Library.Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace IssueTracker.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetTicketForUser(string id)
+        public async Task<IActionResult> GetTicketsForUser(string id)
         {
             if (id == null)
             {
@@ -40,37 +39,46 @@ namespace IssueTracker.Controllers
                 return BadRequest("Ticket doesnot exist");
             }
 
+            var userExist = await _userManager.FindByIdAsync(id);
+            if (userExist == null)
+            {
+                _logger.LogError("Ticket id  sent from client is null.");
+                return NotFound("Ticket doesnot exist");
+            }
             /* adding this code will help us get Application User in the
-               code var user = await _repo.UserTicket.GetAllTicketsForUser(id);
-               research about it why this is showing this behaviour as we can change the
-               similar code in ticket and project as well
-             */
+              code var allTickets = await _repo.Ticket.GetAllTickets();
+              research about it why this is showing this behaviour as we can change the
+              similar code in ticket and project as well
+            */
             var userstickets = await _repo.UserTicket.GetAllTicketsForUser(id);
-
-            var user = await _userManager.FindByIdAsync(id);
-
-            if (user.UsersTickets != null)
+            var allTickets = await _repo.Ticket.GetAllTickets();
+            var usersTickets = allTickets.ToList().Select(x => x.UsersTickets);
+            List<GetAllTicketVmDto> individualTickets = new List<GetAllTicketVmDto>();
+            foreach (var userTicket in usersTickets)
             {
-                var userTickets = user.UsersTickets.Select(x => x.Ticket).ToList();
-                var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(userTickets);
-                foreach (var users in ticketsVm)
+                var tickets = userTicket.Where(x => x.Id.Equals(id)).Select(x => x.Ticket).ToList();
+                if (tickets.Count != 0)
                 {
-                    foreach (var userwithTicket in users.UsersTicketsVm)
-                    {
-                        var userVm = new ApplicationUser();
-                        userVm.Id = userwithTicket.Id;
-                        var userRoleD = await _userManager.GetRolesAsync(userVm);
-                        //Adding user Role
-                        userwithTicket.ApplicationUser.userRole = userRoleD.ToList();
-                    }
+                    individualTickets = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets).ToList();
                 }
-                return Ok(ticketsVm);
             }
-            else
+
+            //This function populates roles the users
+            foreach (var ticket in individualTickets)
             {
-                _logger.LogError("Invalid ticket id");
-                return BadRequest();
+                foreach (var user in ticket.UsersTicketsVm)
+                {
+                    var userToFind = await _userManager.FindByIdAsync(user.Id);
+                    var userRoleToAdd = await _userManager.GetRolesAsync(userToFind);
+
+                    user.ApplicationUser = new ApplicationUserVm();
+                    user.ApplicationUser.userEmail = userToFind.Email;
+                    user.ApplicationUser.userName = userToFind.Name;
+                    user.ApplicationUser.userRole = userRoleToAdd.ToList();
+                }
             }
+
+            return Ok(individualTickets);
         }
     }
 }

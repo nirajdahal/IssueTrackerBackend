@@ -14,6 +14,6 @@ namespace Library.Entities.DTO.ProjectDto
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public ICollection<UserProject> UsersProjects { get; set; }
+        public ICollection<ProjectManager> ProjectManagers { get; set; }
     }
 }

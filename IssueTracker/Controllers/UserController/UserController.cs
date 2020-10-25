@@ -3,7 +3,6 @@ using Library.Contracts;
 using Library.Entities.DTO;
 using Library.Entities.Enums;
 using Library.Entities.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -108,6 +107,20 @@ namespace IssueTracker.Controllers
             }
             var result = await RegisterUserHelper(model);
             return Ok(result);
+        }
+
+        [HttpGet("developers")]
+        public async Task<IActionResult> GetAllDevelopers()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("Submitter");
+            return Ok(users);
+        }
+
+        [HttpGet("pmanagers")]
+        public async Task<IActionResult> GetAllPManagers()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("Project Manager");
+            return Ok(users);
         }
 
         public async Task<object> RegisterUserHelper(RegisterModelDto model)
