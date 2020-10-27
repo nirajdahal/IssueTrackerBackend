@@ -50,6 +50,7 @@ namespace IssueTracker.Controllers
               research about it why this is showing this behaviour as we can change the
               similar code in ticket and project as well
             */
+            var projectManagers = await _repo.ProjectManager.GetProjectManagers();
             var userstickets = await _repo.UserTicket.GetAllTicketsForUser(id);
             var allTickets = await _repo.Ticket.GetAllTickets();
             var usersTickets = allTickets.ToList().Select(x => x.UsersTickets);
