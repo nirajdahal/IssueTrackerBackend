@@ -37,6 +37,7 @@ namespace IssueTracker.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllTickets()
         {
+            var allProjectManagers = await _repo.ProjectManager.GetProjectManagers();
             var tickets = await _repo.Ticket.GetAllTickets();
             var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
 
@@ -72,6 +73,7 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Ticket object sent from client is null.");
                 return BadRequest("Ticket You Are Trying To Create Doesnot Exist");
             }
+            var projectManagers = await _repo.ProjectManager.GetProjectManager(tickets.ProjectId);
             var ticketsVm = _mapper.Map<GetAllTicketVmDto>(tickets);
 
             var userTicket = ticketsVm.UsersTicketsVm;

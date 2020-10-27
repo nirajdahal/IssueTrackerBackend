@@ -70,7 +70,9 @@ namespace IssueTracker.Controllers
              helps us to get project manager in this code var projects = await _repo.Project.GetAllProjects();
              It is something to reasearch about why ef core shows this behaviour
              */
+
             var projectManagers = await _repo.ProjectManager.GetProjectManagers();
+
             var projects = await _repo.Project.GetAllProjects();
             var projectToReturn = _mapper.Map<IEnumerable<ProjectDto>>(projects);
             return Ok(projectToReturn);

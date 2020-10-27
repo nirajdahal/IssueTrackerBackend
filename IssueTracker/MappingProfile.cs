@@ -22,6 +22,9 @@ namespace IssueTracker
             CreateMap<ApplicationUser, ApplicationUserVm>()
                 .ForMember(dest => dest.userEmail, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<ApplicationUser, UserVm>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<UserTicket, TicketsOfUsersDto>()
                .ForMember(dest => dest.TicketVm, opt => opt.MapFrom(src => src.Ticket));

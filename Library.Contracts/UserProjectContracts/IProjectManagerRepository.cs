@@ -9,7 +9,7 @@ namespace Library.Contracts.ProjectManagerContracts
     {
         Task<IEnumerable<ProjectManager>> GetAllProjectsForManager(string id);
 
-        Task<IEnumerable<ProjectManager>> GetProjectManager(Guid ProjectManagerId);
+        Task<IEnumerable<ProjectManager>> GetProjectManager(Guid ProjectId);
 
         void CreateProjectManager(ProjectManager ProjectManager);
 

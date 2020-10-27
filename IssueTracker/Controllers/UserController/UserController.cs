@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Contracts;
 using Library.Entities.DTO;
+using Library.Entities.DTO.UserDto;
 using Library.Entities.Enums;
 using Library.Entities.Models;
 using Microsoft.AspNetCore.Identity;
@@ -57,7 +58,7 @@ namespace IssueTracker.Controllers
             }
 
             var userRole = await _userManager.GetRolesAsync(user);
-            var userRoles = new List<string> { "Admin", "Submitter", "Project Manager" };
+            var userRoles = new List<string> { "Admin", "Submitter", "Project Manager", "Developer" };
 
             foreach (var role in userRole)
             {
@@ -112,8 +113,9 @@ namespace IssueTracker.Controllers
         [HttpGet("developers")]
         public async Task<IActionResult> GetAllDevelopers()
         {
-            var users = await _userManager.GetUsersInRoleAsync("Submitter");
-            return Ok(users);
+            var users = await _userManager.GetUsersInRoleAsync("Developer");
+            var developersToReturn = _mapper.Map<IEnumerable<UserVm>>(users);
+            return Ok(developersToReturn);
         }
 
         [HttpGet("pmanagers")]
