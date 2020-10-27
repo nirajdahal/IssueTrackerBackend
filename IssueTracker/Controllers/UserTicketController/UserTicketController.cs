@@ -55,16 +55,17 @@ namespace IssueTracker.Controllers
             var allTickets = await _repo.Ticket.GetAllTickets();
             var usersTickets = allTickets.ToList().Select(x => x.UsersTickets);
             List<GetAllTicketVmDto> individualTickets = new List<GetAllTicketVmDto>();
+
             foreach (var userTicket in usersTickets)
             {
                 var tickets = userTicket.Where(x => x.Id.Equals(id)).Select(x => x.Ticket).ToList();
                 if (tickets.Count != 0)
                 {
-                    individualTickets = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets).ToList();
+                    var ticketToAdd = _mapper.Map<GetAllTicketVmDto>(tickets[0]);
+                    individualTickets.Add(ticketToAdd);
                 }
             }
 
-            //This function populates roles the users
             foreach (var ticket in individualTickets)
             {
                 foreach (var user in ticket.UsersTicketsVm)
