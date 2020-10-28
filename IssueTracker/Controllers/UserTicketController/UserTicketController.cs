@@ -54,19 +54,20 @@ namespace IssueTracker.Controllers
             var userstickets = await _repo.UserTicket.GetAllTicketsForUser(id);
             var allTickets = await _repo.Ticket.GetAllTickets();
             var usersTickets = allTickets.ToList().Select(x => x.UsersTickets);
+            var managerTickets = allTickets.ToList().Select(x => x.Project.ProjectManagers);
             List<GetAllTicketVmDto> individualTickets = new List<GetAllTicketVmDto>();
 
             string userRole = User.Claims.ToList()[3].Value;
 
             if (userRole.Equals("Project Manager"))
             {
-                foreach (var userTicket in usersTickets)
+                foreach (var managerTicket in managerTickets)
                 {
-                    var tickets = userTicket.Select(x => x.Ticket).Where(x => x.Project.ProjectManagers.All(x => x.Id.Equals(id))).ToList();
+                    var tickets = managerTicket.Where(x => x.Id.Equals(id)).Select(x => x.Project.Ticket).ToList();
                     if (tickets.Count != 0)
                     {
-                        var ticketToAdd = _mapper.Map<GetAllTicketVmDto>(tickets[0]);
-                        individualTickets.Add(ticketToAdd);
+                        var ticketToAdd = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets[0]);
+                        individualTickets = ticketToAdd.ToList();
                     }
                 }
             }

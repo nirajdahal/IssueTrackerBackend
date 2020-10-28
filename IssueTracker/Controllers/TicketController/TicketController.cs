@@ -157,6 +157,24 @@ namespace IssueTracker.Controllers
             _repo.UserTicket.RemoveTicketAndUser(usersticketFromDatabase);
             await _repo.Save();
 
+            string userRole = User.Claims.ToList()[3].Value;
+
+            if (userRole == "Admin" || userRole == "Project Manager")
+            {
+                //updating the database so the previous record of project managers gets deleted in database and new one gets added
+                var previousProjectManager = await _repo.ProjectManager.GetProjectManager(ticketToUpdate.ProjectId);
+                if (previousProjectManager != null)
+                {
+                    _repo.ProjectManager.RemoveProjectAndManager(previousProjectManager);
+                    await _repo.Save();
+                }
+                foreach (var managers in ticketToUpdate.ProjectManagers)
+                {
+                    _repo.ProjectManager.CreateProjectManager(managers);
+                    await _repo.Save();
+                }
+            }
+
             //Getting the username and email from jwt token to set it to created by name and email
             var userName = User.Claims.ToList()[1].Value;
             var userEmail = User.Claims.ToList()[2].Value;
@@ -225,13 +243,13 @@ namespace IssueTracker.Controllers
 
             // getting values for Ticket Type
             var ticketTypesVm = ticketsVm.Select(x => x.TicketTypeVm);
-            List<DashboardData> ticketTypesList = new List<DashboardData>();
+            List<DashboardDataForTicket> ticketTypesList = new List<DashboardDataForTicket>();
             foreach (var types in allTicketTypesVm)
             {
                 var individualTicketType = ticketTypesVm.Where(x => x.Name.Equals(types.Name));
                 var ticketTypeCount = individualTicketType.ToList().Count;
                 var ticketTypeName = types.Name;
-                var ticketTypeData = new DashboardData();
+                var ticketTypeData = new DashboardDataForTicket();
                 ticketTypeData.Name = ticketTypeName;
                 ticketTypeData.Count = ticketTypeCount;
                 ticketTypesList.Add(ticketTypeData);
@@ -239,13 +257,13 @@ namespace IssueTracker.Controllers
 
             // getting values for Ticket Priority
             var ticketPriorityVm = ticketsVm.Select(x => x.TicketPriorityVm);
-            List<DashboardData> ticketPriorityList = new List<DashboardData>();
+            List<DashboardDataForTicket> ticketPriorityList = new List<DashboardDataForTicket>();
             foreach (var priority in allTicketPriorityVm)
             {
                 var individualPrority = ticketPriorityVm.Where(x => x.Name.Equals(priority.Name));
                 var ticketPriorityCount = individualPrority.ToList().Count;
                 var ticketPriorityName = priority.Name;
-                var ticketPriorityData = new DashboardData();
+                var ticketPriorityData = new DashboardDataForTicket();
                 ticketPriorityData.Name = ticketPriorityName;
                 ticketPriorityData.Count = ticketPriorityCount;
                 ticketPriorityList.Add(ticketPriorityData);
@@ -253,30 +271,24 @@ namespace IssueTracker.Controllers
 
             // getting values for Ticket Status
             var ticketStatusVm = ticketsVm.Select(x => x.TicketStatusVm);
-            List<DashboardData> ticketStatusList = new List<DashboardData>();
+            List<DashboardDataForTicket> ticketStatusList = new List<DashboardDataForTicket>();
             foreach (var status in allTicketStatusVm)
             {
                 var individualStatus = ticketStatusVm.Where(x => x.Name.Equals(status.Name));
                 var ticketStatusCount = individualStatus.ToList().Count;
                 var ticketStatusName = status.Name;
-                var ticketStatusData = new DashboardData();
+                var ticketStatusData = new DashboardDataForTicket();
                 ticketStatusData.Name = ticketStatusName;
                 ticketStatusData.Count = ticketStatusCount;
                 ticketStatusList.Add(ticketStatusData);
             }
 
-            //var ticketsTypes = ticketsVm.Select(x => x.TicketTypeVm);
-            //var ticketsPriority = ticketsVm.Select(x => x.TicketPriorityVm);
-            //var ticketsStatus = ticketsVm.Select(x => x.TicketStatusVm);
-
-            return Ok(ticketStatusList);
+            DataForTicketDashboardVm data = new DataForTicketDashboardVm();
+            data.TicketPriorityData = ticketPriorityList;
+            data.TicketStatusData = ticketStatusList;
+            data.TicketTypeData = ticketTypesList;
+            data.totalTickets = tickets.Count();
+            return Ok(data);
         }
-    }
-
-    public class DashboardData
-    {
-        public string Name { get; set; }
-
-        public int Count { get; set; }
     }
 }

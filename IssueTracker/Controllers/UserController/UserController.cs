@@ -122,7 +122,8 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> GetAllPManagers()
         {
             var users = await _userManager.GetUsersInRoleAsync("Project Manager");
-            return Ok(users);
+            var managerToReturn = _mapper.Map<IEnumerable<UserVm>>(users);
+            return Ok(managerToReturn);
         }
 
         public async Task<object> RegisterUserHelper(RegisterModelDto model)
