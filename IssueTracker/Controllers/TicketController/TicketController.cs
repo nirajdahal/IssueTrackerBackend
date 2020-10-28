@@ -208,5 +208,75 @@ namespace IssueTracker.Controllers
             await _repo.Save();
             return Ok("Sucessfully Deleted Ticket");
         }
+
+        [HttpGet("dashboard")]
+        [Authorize]
+        public async Task<IActionResult> TicketDataForDashboard()
+        {
+            var tickets = await _repo.Ticket.GetAllTickets();
+            var allTicketTypes = await _repo.TicketType.GetAllTicketType();
+            var allTicketPriority = await _repo.TicketPriority.GetAllTicketPriority();
+            var allTicketStatus = await _repo.TicketStatus.GetAllTicketStatus();
+
+            var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
+            var allTicketTypesVm = _mapper.Map<IEnumerable<TicketTypeVmDto>>(allTicketTypes);
+            var allTicketPriorityVm = _mapper.Map<IEnumerable<TicketPriorityVmDto>>(allTicketPriority);
+            var allTicketStatusVm = _mapper.Map<IEnumerable<TicketStatusVmDto>>(allTicketStatus);
+
+            // getting values for Ticket Type
+            var ticketTypesVm = ticketsVm.Select(x => x.TicketTypeVm);
+            List<DashboardData> ticketTypesList = new List<DashboardData>();
+            foreach (var types in allTicketTypesVm)
+            {
+                var individualTicketType = ticketTypesVm.Where(x => x.Name.Equals(types.Name));
+                var ticketTypeCount = individualTicketType.ToList().Count;
+                var ticketTypeName = types.Name;
+                var ticketTypeData = new DashboardData();
+                ticketTypeData.Name = ticketTypeName;
+                ticketTypeData.Count = ticketTypeCount;
+                ticketTypesList.Add(ticketTypeData);
+            }
+
+            // getting values for Ticket Priority
+            var ticketPriorityVm = ticketsVm.Select(x => x.TicketPriorityVm);
+            List<DashboardData> ticketPriorityList = new List<DashboardData>();
+            foreach (var priority in allTicketPriorityVm)
+            {
+                var individualPrority = ticketPriorityVm.Where(x => x.Name.Equals(priority.Name));
+                var ticketPriorityCount = individualPrority.ToList().Count;
+                var ticketPriorityName = priority.Name;
+                var ticketPriorityData = new DashboardData();
+                ticketPriorityData.Name = ticketPriorityName;
+                ticketPriorityData.Count = ticketPriorityCount;
+                ticketPriorityList.Add(ticketPriorityData);
+            }
+
+            // getting values for Ticket Status
+            var ticketStatusVm = ticketsVm.Select(x => x.TicketStatusVm);
+            List<DashboardData> ticketStatusList = new List<DashboardData>();
+            foreach (var status in allTicketStatusVm)
+            {
+                var individualStatus = ticketStatusVm.Where(x => x.Name.Equals(status.Name));
+                var ticketStatusCount = individualStatus.ToList().Count;
+                var ticketStatusName = status.Name;
+                var ticketStatusData = new DashboardData();
+                ticketStatusData.Name = ticketStatusName;
+                ticketStatusData.Count = ticketStatusCount;
+                ticketStatusList.Add(ticketStatusData);
+            }
+
+            //var ticketsTypes = ticketsVm.Select(x => x.TicketTypeVm);
+            //var ticketsPriority = ticketsVm.Select(x => x.TicketPriorityVm);
+            //var ticketsStatus = ticketsVm.Select(x => x.TicketStatusVm);
+
+            return Ok(ticketStatusList);
+        }
+    }
+
+    public class DashboardData
+    {
+        public string Name { get; set; }
+
+        public int Count { get; set; }
     }
 }
