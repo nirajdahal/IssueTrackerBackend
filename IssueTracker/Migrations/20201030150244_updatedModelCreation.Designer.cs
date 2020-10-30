@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20201021141935_ModifiedUserModelValidation")]
-    partial class ModifiedUserModelValidation
+    [Migration("20201030150244_updatedModelCreation")]
+    partial class updatedModelCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -186,6 +186,22 @@ namespace IssueTracker.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TicketType");
+                });
+
+            modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ProjectId", "Id");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("ProjectManager");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.UserProject", b =>
@@ -471,6 +487,21 @@ namespace IssueTracker.Migrations
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("Comments")
                         .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
+                {
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ProjectManagers")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.Projects.Project", "Project")
+                        .WithMany("ProjectManagers")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

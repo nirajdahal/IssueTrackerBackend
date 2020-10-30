@@ -15,6 +15,7 @@ namespace Library.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProjectManager>().HasKey(sc => new { sc.ProjectId, sc.Id });
             modelBuilder.Entity<UserProject>().HasKey(sc => new { sc.ProjectId, sc.Id });
             modelBuilder.Entity<UserTicket>().HasKey(sc => new { sc.TicketId, sc.Id });
 

@@ -188,23 +188,16 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
                 {
-                    b.Property<Guid>("projectManagerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnName("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("projectManagerId");
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ProjectId", "Id");
 
                     b.HasIndex("Id");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectManager");
                 });
@@ -217,9 +210,6 @@ namespace IssueTracker.Migrations
                     b.Property<string>("Id")
                         .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("userProjectId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ProjectId", "Id");
 

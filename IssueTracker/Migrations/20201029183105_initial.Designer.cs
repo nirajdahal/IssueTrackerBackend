@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20201015172835_updatedTicketModels")]
-    partial class updatedTicketModels
+    [Migration("20201029183105_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,24 @@ namespace IssueTracker.Migrations
                         .HasColumnType("nvarchar(160)")
                         .HasMaxLength(160);
 
+                    b.Property<string>("SubmittedByEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubmittedByName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(60)")
                         .HasMaxLength(60);
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedByEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedByName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -62,8 +77,11 @@ namespace IssueTracker.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SubmittedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("SubmittedByEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubmittedByName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("TPriorityId")
                         .HasColumnType("uniqueidentifier");
@@ -82,22 +100,21 @@ namespace IssueTracker.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("UpdatedByEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedByName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("SubmittedById");
 
                     b.HasIndex("TPriorityId");
 
                     b.HasIndex("TStatusId");
 
                     b.HasIndex("TTypeId");
-
-                    b.HasIndex("UpdatedById");
 
                     b.ToTable("Tickets");
                 });
@@ -169,6 +186,22 @@ namespace IssueTracker.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TicketType");
+                });
+
+            modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnName("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectManager");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.UserProject", b =>
@@ -410,7 +443,8 @@ namespace IssueTracker.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(60)")
+                        .HasMaxLength(60);
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -422,10 +456,6 @@ namespace IssueTracker.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "SubmittedBy")
-                        .WithMany()
-                        .HasForeignKey("SubmittedById");
 
                     b.HasOne("Library.Entities.Models.Tickets.TicketPriority", "TicketPriority")
                         .WithMany("Ticket")
@@ -444,10 +474,6 @@ namespace IssueTracker.Migrations
                         .HasForeignKey("TTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
@@ -461,6 +487,21 @@ namespace IssueTracker.Migrations
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("Comments")
                         .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
+                {
+                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ProjectManagers")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Library.Entities.Models.Projects.Project", "Project")
+                        .WithMany("ProjectManagers")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

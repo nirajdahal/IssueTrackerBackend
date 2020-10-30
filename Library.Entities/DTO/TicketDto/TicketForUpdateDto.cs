@@ -26,7 +26,6 @@ namespace Library.Entities.DTO.TicketDto
 
         public Guid TStatusId { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public ICollection<ProjectManager> ProjectManagers { get; set; }
         public ICollection<UserTicket> UsersTickets { get; set; }
     }
 }

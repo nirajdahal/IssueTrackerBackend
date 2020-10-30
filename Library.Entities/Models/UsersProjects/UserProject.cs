@@ -8,9 +8,6 @@ namespace Library.Entities.Models.UsersProjects
     public class UserProject
 
     {
-        [Key]
-        public Guid userProjectId { get; set; }
-
         [ForeignKey(nameof(Project))]
         public Guid ProjectId { get; set; }
 

@@ -105,7 +105,7 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid model state for the Ticket");
                 return UnprocessableEntity(ModelState);
             }
-            ticket.TStatusId = new Guid("256097cd-4147-4c73-6355-08d86f48d2ba");
+            ticket.TStatusId = new Guid("2b80e271-893e-40b2-9eac-706b9d71f02f");
 
             var ticketToCreate = _mapper.Map<Ticket>(ticket);
 
@@ -157,23 +157,23 @@ namespace IssueTracker.Controllers
             _repo.UserTicket.RemoveTicketAndUser(usersticketFromDatabase);
             await _repo.Save();
 
-            string userRole = User.Claims.ToList()[3].Value;
+            //string userRole = User.Claims.ToList()[3].Value;
 
-            if (userRole == "Admin" || userRole == "Project Manager")
-            {
-                //updating the database so the previous record of project managers gets deleted in database and new one gets added
-                var previousProjectManager = await _repo.ProjectManager.GetProjectManager(ticketToUpdate.ProjectId);
-                if (previousProjectManager != null)
-                {
-                    _repo.ProjectManager.RemoveProjectAndManager(previousProjectManager);
-                    await _repo.Save();
-                }
-                foreach (var managers in ticketToUpdate.ProjectManagers)
-                {
-                    _repo.ProjectManager.CreateProjectManager(managers);
-                    await _repo.Save();
-                }
-            }
+            //if (userRole == "Admin" || userRole == "Project Manager")
+            //{
+            //    //updating the database so the previous record of project managers gets deleted in database and new one gets added
+            //    var previousProjectManager = await _repo.ProjectManager.GetProjectManager(ticketToUpdate.ProjectId);
+            //    if (previousProjectManager != null)
+            //    {
+            //        _repo.ProjectManager.RemoveProjectAndManager(previousProjectManager);
+            //        await _repo.Save();
+            //    }
+            //    foreach (var managers in ticketToUpdate.ProjectManagers)
+            //    {
+            //        _repo.ProjectManager.CreateProjectManager(managers);
+            //        await _repo.Save();
+            //    }
+            //}
 
             //Getting the username and email from jwt token to set it to created by name and email
             var userName = User.Claims.ToList()[1].Value;

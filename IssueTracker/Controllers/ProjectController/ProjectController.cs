@@ -50,14 +50,23 @@ namespace IssueTracker.Controllers
             }
 
             var projectToCreate = _mapper.Map<Project>(project);
-            projectToCreate.Id = Guid.NewGuid();
-
+            var newGuid = Guid.NewGuid(); ;
+            projectToCreate.Id = newGuid;
             //Getting the username and email from jwt token to set it to CreatedBy name and email
             var userName = User.Claims.ToList()[1].Value;
             var userEmail = User.Claims.ToList()[2].Value;
             projectToCreate.SubmittedByName = userName;
             projectToCreate.SubmittedByEmail = userEmail;
             projectToCreate.CreatedAt = DateTime.Now;
+            if (projectToCreate.ProjectManagers != null)
+            {
+                foreach (var projectManager in project.ProjectManagers)
+                {
+                    ProjectManager projectManagerToAdd = new ProjectManager();
+                    projectManagerToAdd.Id = projectManager.Id;
+                    projectManagerToAdd.ProjectId = newGuid;
+                }
+            }
             _repo.Project.CreateProject(projectToCreate);
             await _repo.Save();
             return Ok("Project Created Sucessfully");
@@ -70,10 +79,14 @@ namespace IssueTracker.Controllers
              helps us to get project manager in this code var projects = await _repo.Project.GetAllProjects();
              It is something to reasearch about why ef core shows this behaviour
              */
-
             var projectManagers = await _repo.ProjectManager.GetProjectManagers();
-
             var projects = await _repo.Project.GetAllProjects();
+            var userTickets = await _repo.UserTicket.GetUsersTickets();
+            foreach (var project in projects)
+            {
+                await AddUserToProject.GenerateUserProject(_userManager, _repo, _logger, _mapper, project, userTickets);
+            }
+
             var projectToReturn = _mapper.Map<IEnumerable<ProjectDto>>(projects);
             return Ok(projectToReturn);
         }
@@ -94,56 +107,11 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Project object sent from client is null.");
                 return BadRequest("The project you are searching doesnot exist");
             }
-
-            /*remove data with this project id from userproject because
-            we dont have any method which just updates the user project directly. For that we have to remove every
-            project user realtionship from userproject and add new one from looking at tickets
-            */
-            var userProjects = await _repo.UserProject.GetUserProject(id);
-            if (userProjects != null)
-            {
-                _repo.UserProject.RemoveProjectAndUser(userProjects);
-            }
-
-            /*get user value from all the tickets which belongs to specific project otherwise we wont be
-            able to add user to a project. As all the ticket has project id and user refernce.
-            i.e all users from ticket == all user of project */
-
-            var tickets = await _repo.Ticket.GetAllTickets();
-            var ticketsWithThisProject = tickets.Where(t => t.ProjectId.Equals(id)).ToList();
-            var projectWithThisTicketUsers = ticketsWithThisProject.Select(x => x.UsersTickets);
-
-            List<UserProject> trackProject = new List<UserProject>();
-            foreach (var projectWithThisTicketUser in projectWithThisTicketUsers)
-            {
-                foreach (var user in projectWithThisTicketUser)
-                {
-                    UserProject userProject = new UserProject
-                    {
-                        Id = user.Id,
-                        ProjectId = id
-                    };
-
-                    //this checks whether the track project list already has user added to it
-                    //because if we allow duplicate userproject in the list and later create userproject
-                    //it will throw an error
-                    var checkDup = trackProject.Any(x => x.Id.Equals(userProject.Id));
-
-                    if (!checkDup)
-                    {
-                        trackProject.Add(userProject);
-                    }
-                }
-            }
-            foreach (var userProject in trackProject)
-            {
-                _repo.UserProject.CreateUserProject(userProject);
-                await _repo.Save();
-            }
+            var projectManagers = await _repo.ProjectManager.GetProjectManagers();
             var project = await _repo.Project.GetProject(id);
-
+            var userTickets = await _repo.UserTicket.GetUsersTickets();
+            await AddUserToProject.GenerateUserProject(_userManager, _repo, _logger, _mapper, project, userTickets);
             var projectToReturn = _mapper.Map<ProjectDto>(project);
-
             foreach (var user in projectToReturn.UsersProjects)
             {
                 var applicationUser = await _userManager.FindByIdAsync(user.Id);

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IssueTracker.Migrations
 {
-    public partial class UpdatedModels : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,7 +41,7 @@ namespace IssueTracker.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 60, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,9 +53,14 @@ namespace IssueTracker.Migrations
                 columns: table => new
                 {
                     ProjectId = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(maxLength: 60, nullable: false),
-                    Description = table.Column<string>(maxLength: 160, nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    Title = table.Column<string>(maxLength: 60, nullable: true),
+                    Description = table.Column<string>(maxLength: 160, nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdateAt = table.Column<DateTime>(nullable: false),
+                    SubmittedByName = table.Column<string>(nullable: true),
+                    SubmittedByEmail = table.Column<string>(nullable: true),
+                    UpdatedByName = table.Column<string>(nullable: true),
+                    UpdatedByEmail = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -205,6 +210,30 @@ namespace IssueTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectManager",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    ProjectId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectManager", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_ProjectManager_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectManager_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserProject",
                 columns: table => new
                 {
@@ -235,12 +264,16 @@ namespace IssueTracker.Migrations
                     TicketId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 60, nullable: false),
                     Description = table.Column<string>(maxLength: 160, nullable: false),
-                    SubmitterName = table.Column<string>(nullable: true),
+                    UpdatedByName = table.Column<string>(nullable: true),
+                    UpdatedByEmail = table.Column<string>(nullable: true),
+                    SubmittedByName = table.Column<string>(nullable: true),
+                    SubmittedByEmail = table.Column<string>(nullable: true),
                     TTypeId = table.Column<Guid>(nullable: false),
                     TStatusId = table.Column<Guid>(nullable: false),
                     TPriorityId = table.Column<Guid>(nullable: false),
                     ProjectId = table.Column<Guid>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -272,18 +305,25 @@ namespace IssueTracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TicketComments",
+                name: "TicketComment",
                 columns: table => new
                 {
+                    UserId = table.Column<string>(nullable: false),
                     TCommentsId = table.Column<Guid>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 160, nullable: true),
                     TicketId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TicketComments", x => x.TCommentsId);
+                    table.PrimaryKey("PK_TicketComment", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_TicketComments_Tickets_TicketId",
+                        name: "FK_TicketComment_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TicketComment_Tickets_TicketId",
                         column: x => x.TicketId,
                         principalTable: "Tickets",
                         principalColumn: "TicketId",
@@ -354,8 +394,13 @@ namespace IssueTracker.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TicketComments_TicketId",
-                table: "TicketComments",
+                name: "IX_ProjectManager_ProjectId",
+                table: "ProjectManager",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketComment_TicketId",
+                table: "TicketComment",
                 column: "TicketId");
 
             migrationBuilder.CreateIndex(
@@ -407,7 +452,10 @@ namespace IssueTracker.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "TicketComments");
+                name: "ProjectManager");
+
+            migrationBuilder.DropTable(
+                name: "TicketComment");
 
             migrationBuilder.DropTable(
                 name: "UserProject");
