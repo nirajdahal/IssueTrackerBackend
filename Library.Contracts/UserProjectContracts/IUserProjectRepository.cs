@@ -11,6 +11,8 @@ namespace Library.Contracts.UserProjectContracts
 
         Task<IEnumerable<UserProject>> GetUserProject(Guid userProjectId);
 
+        Task<IEnumerable<UserProject>> GetAllUsersProjects();
+
         void CreateUserProject(UserProject userProject);
 
         void DeleteUserProject(UserProject userProject);

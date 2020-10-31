@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Library.Entities.DTO.ProjectDto
 {
-    public class ProjectDto
+    public class ProjectVmDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

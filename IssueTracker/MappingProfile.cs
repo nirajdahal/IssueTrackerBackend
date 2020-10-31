@@ -57,7 +57,7 @@ namespace IssueTracker
             CreateMap<Ticket, TicketForProjectDto>();
             CreateMap<UserProject, UserProjectVmDto>().ReverseMap();
             CreateMap<ProjectManager, ProjectManagerVmDto>();
-            CreateMap<Project, ProjectDto>()
+            CreateMap<Project, ProjectVmDto>()
                 .ForMember(dest => dest.TicketVm, opt => opt.MapFrom(src => src.Ticket))
                 .ForMember(dest => dest.UsersProjects, opt => opt.MapFrom(src => src.UsersProjects))
                 .ForMember(dest => dest.ProjectManagers, opt => opt.MapFrom(src => src.ProjectManagers))

@@ -50,7 +50,7 @@ namespace IssueTracker.Controllers
             }
 
             var projectToCreate = _mapper.Map<Project>(project);
-            var newGuid = Guid.NewGuid(); ;
+            var newGuid = Guid.NewGuid();
             projectToCreate.Id = newGuid;
             //Getting the username and email from jwt token to set it to CreatedBy name and email
             var userName = User.Claims.ToList()[1].Value;
@@ -84,10 +84,11 @@ namespace IssueTracker.Controllers
             var userTickets = await _repo.UserTicket.GetUsersTickets();
             foreach (var project in projects)
             {
-                await AddUserToProject.GenerateUserProject(_userManager, _repo, _logger, _mapper, project, userTickets);
+                AddUserToProject add = new AddUserToProject();
+                await add.GenerateUserProject(_repo, project, userTickets);
             }
 
-            var projectToReturn = _mapper.Map<IEnumerable<ProjectDto>>(projects);
+            var projectToReturn = _mapper.Map<IEnumerable<ProjectVmDto>>(projects);
             return Ok(projectToReturn);
         }
 
@@ -109,9 +110,18 @@ namespace IssueTracker.Controllers
             }
             var projectManagers = await _repo.ProjectManager.GetProjectManagers();
             var project = await _repo.Project.GetProject(id);
+
+            if (project == null)
+            {
+                _logger.LogError("Project object sent from client is null.");
+                return BadRequest("The project you are searching doesnot exist");
+            }
             var userTickets = await _repo.UserTicket.GetUsersTickets();
-            await AddUserToProject.GenerateUserProject(_userManager, _repo, _logger, _mapper, project, userTickets);
-            var projectToReturn = _mapper.Map<ProjectDto>(project);
+
+            AddUserToProject add = new AddUserToProject();
+
+            await add.GenerateUserProject(_repo, project, userTickets);
+            var projectToReturn = _mapper.Map<ProjectVmDto>(project);
             foreach (var user in projectToReturn.UsersProjects)
             {
                 var applicationUser = await _userManager.FindByIdAsync(user.Id);

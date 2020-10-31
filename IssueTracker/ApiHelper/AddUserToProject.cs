@@ -12,9 +12,16 @@ using System.Threading.Tasks;
 
 namespace IssueTracker.ApiHelper
 {
-    public static class AddUserToProject
+    public class AddUserToProject
     {
-        public static async Task GenerateUserProject(UserManager<ApplicationUser> _userManager, IRepositoryManager _repo, ILoggerManager _logger, IMapper _mapper, Project project, IEnumerable<UserTicket> userTickets)
+        //private IRepositoryManager _repo;
+
+        //public AddUserToProject(IRepositoryManager repo)
+        //{
+        //    _repo = repo;
+        //}
+
+        public async Task GenerateUserProject(IRepositoryManager _repo, Project project, IEnumerable<UserTicket> userTickets)
         {
             var userProjects = await _repo.UserProject.GetUserProject(project.Id);
             if (userProjects != null)

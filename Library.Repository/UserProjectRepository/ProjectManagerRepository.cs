@@ -41,6 +41,8 @@ namespace Library.Repository
         public async Task<IEnumerable<ProjectManager>> GetProjectManagers()
         {
             var ProjectType = await FindAll()
+                .Include(x => x.Project).ThenInclude(x => x.UsersProjects)
+                .Include(x => x.Project).ThenInclude(x => x.Ticket)
                 .Include(x => x.ApplicationUser)
                 .ToListAsync();
             return ProjectType;

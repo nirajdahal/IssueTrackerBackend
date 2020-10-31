@@ -4,6 +4,7 @@ using Library.Entities.Models.UsersProjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Library.Repository
@@ -24,9 +25,17 @@ namespace Library.Repository
             Delete(userProject);
         }
 
+        public async Task<IEnumerable<UserProject>> GetAllUsersProjects()
+        {
+            var usersProjects = await FindAll().ToListAsync();
+            return usersProjects;
+        }
+
         public async Task<IEnumerable<UserProject>> GetAllProjectsForUser(string id)
         {
             var ProjectsTypes = await FindByCondition(x => x.Id.Equals(id))
+                .Include(x => x.Project).ThenInclude(x => x.UsersProjects)
+                .Include(x => x.Project).ThenInclude(x => x.Ticket)
                 .ToListAsync();
             return ProjectsTypes;
         }
