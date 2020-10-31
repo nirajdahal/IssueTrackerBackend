@@ -36,7 +36,7 @@ namespace IssueTracker
                 .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
                 .ForMember(dest => dest.TStatusId, opt => opt.MapFrom(src => src.TStatusId)).ReverseMap();
             CreateMap<TicketForUpdateDto, Ticket>();
-            CreateMap<TicketPriority, TicketPriorityVmDto>();
+            CreateMap<TicketPriority, TicketPriorityVmDto>().ReverseMap();
             CreateMap<TicketStatus, TicketStatusVmDto>();
             CreateMap<TicketType, TicketTypeVmDto>()
                  .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));

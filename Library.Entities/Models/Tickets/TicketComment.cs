@@ -9,7 +9,7 @@ namespace Library.Entities.Models.Tickets
         [Column("TCommentsId")]
         public Guid CommentsId { get; set; }
 
-        [MaxLength(160, ErrorMessage = "The comment length cannot exceed more than 160")]
+        [MaxLength(300, ErrorMessage = "The comment length cannot exceed more than 300")]
         public string Description { get; set; }
 
         [ForeignKey(nameof(Ticket))]

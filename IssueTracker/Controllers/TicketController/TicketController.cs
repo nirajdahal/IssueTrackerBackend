@@ -157,24 +157,6 @@ namespace IssueTracker.Controllers
             _repo.UserTicket.RemoveTicketAndUser(usersticketFromDatabase);
             await _repo.Save();
 
-            //string userRole = User.Claims.ToList()[3].Value;
-
-            //if (userRole == "Admin" || userRole == "Project Manager")
-            //{
-            //    //updating the database so the previous record of project managers gets deleted in database and new one gets added
-            //    var previousProjectManager = await _repo.ProjectManager.GetProjectManager(ticketToUpdate.ProjectId);
-            //    if (previousProjectManager != null)
-            //    {
-            //        _repo.ProjectManager.RemoveProjectAndManager(previousProjectManager);
-            //        await _repo.Save();
-            //    }
-            //    foreach (var managers in ticketToUpdate.ProjectManagers)
-            //    {
-            //        _repo.ProjectManager.CreateProjectManager(managers);
-            //        await _repo.Save();
-            //    }
-            //}
-
             //Getting the username and email from jwt token to set it to created by name and email
             var userName = User.Claims.ToList()[1].Value;
             var userEmail = User.Claims.ToList()[2].Value;

@@ -10,7 +10,5 @@ namespace Library.Entities.Models.Tickets
         public Guid Id { get; set; }
 
         public string Name { get; set; }
-
-        public ICollection<Ticket> Ticket { get; set; }
     }
 }

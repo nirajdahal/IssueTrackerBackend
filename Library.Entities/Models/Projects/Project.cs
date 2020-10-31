@@ -12,10 +12,10 @@ namespace Library.Entities.Models.Projects
         [Column("ProjectId")]
         public Guid Id { get; set; }
 
-        [MaxLength(60, ErrorMessage = "Maximum length for the Title is 60 characters.")]
+        [MaxLength(200, ErrorMessage = "Maximum length for the Title is 200 characters.")]
         public string Title { get; set; }
 
-        [MaxLength(160, ErrorMessage = "Maximum length for the Title is 160 characters.")]
+        [MaxLength(500, ErrorMessage = "Maximum length for the Title is 500 characters.")]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }
