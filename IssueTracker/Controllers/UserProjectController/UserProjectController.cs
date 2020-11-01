@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Library.Contracts;
-using Library.Entities.DTO.TicketDto;
-using Library.Entities.DTO.UserDto;
 using Library.Entities.DTO.UserProjectsDto;
 using Library.Entities.Models;
 using Library.Entities.Models.UsersProjects;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IssueTracker.Controllers.UserProjectController
 {

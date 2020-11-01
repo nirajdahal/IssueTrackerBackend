@@ -1,7 +1,6 @@
 ﻿using Library.Contracts;
 using Library.Entities;
 using Library.Entities.Models.Projects;
-using Library.Entities.Models.UsersProjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,5 @@
 ﻿using Library.Entities.Models.Tickets;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Library.Entities.DTO.TicketDto
 {

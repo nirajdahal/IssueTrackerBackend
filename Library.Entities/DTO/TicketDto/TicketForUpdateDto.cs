@@ -1,5 +1,4 @@
-﻿using Library.Entities.Models.UsersProjects;
-using Library.Entities.Models.UsersTickets;
+﻿using Library.Entities.Models.UsersTickets;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

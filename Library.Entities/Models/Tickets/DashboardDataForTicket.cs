@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Library.Entities.Models.Tickets
+﻿namespace Library.Entities.Models.Tickets
 {
     public class DashboardDataForTicket
     {

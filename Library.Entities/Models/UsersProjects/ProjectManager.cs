@@ -1,6 +1,5 @@
 ﻿using Library.Entities.Models.Projects;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Entities.Models.UsersProjects
