@@ -3,6 +3,7 @@ using Library.Contracts;
 using Library.Entities;
 using Library.Entities.DTO.TicketDto;
 using Library.Entities.Models.Tickets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Developer, Project Manager, Submitter")]
         public async Task<IActionResult> GetAllTicketStatus()
         {
             var ticketTypes = await _repo.TicketStatus.GetAllTicketStatus();
@@ -36,6 +38,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> CreateTicketStatus(TicketStatusVmDto newstatus)
         {
             if (newstatus == null)
@@ -57,6 +60,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> UpdateTicketStatus(Guid id, [FromBody] TicketStatusVmDto status)
         {
             if (status == null)
@@ -70,12 +74,6 @@ namespace IssueTracker.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            //var statusExist = await _repo.TicketStatus.GetTicketStatus(id);
-            //if (statusExist == null)
-            //{
-            //    _logger.LogError("Ticket status object sent from client is null.");
-            //    return BadRequest("Empty Ticket Cannot Be Updated");
-            //}
             var statusToUpdate = _mapper.Map<TicketStatus>(status);
 
             _repo.TicketStatus.UpdateTicketStatus(statusToUpdate);
@@ -84,6 +82,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> DeleteTicketStatus(Guid id)
         {
             if (id == null)

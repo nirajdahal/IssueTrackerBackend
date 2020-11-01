@@ -3,6 +3,7 @@ using Library.Contracts;
 using Library.Entities;
 using Library.Entities.DTO.TicketDto;
 using Library.Entities.Models.Tickets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Developer, Project Manager, Submitter")]
         public async Task<IActionResult> GetAllTicketPriority()
         {
             var ticketTypes = await _repo.TicketPriority.GetAllTicketPriority();
@@ -36,6 +38,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> CreateTicketPriority(TicketPriorityVmDto newPriority)
         {
             if (newPriority == null)
@@ -57,6 +60,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Project Manager")]
         public async Task<IActionResult> UpdateTicketPriority(Guid id, [FromBody] TicketPriorityVmDto priority)
         {
             if (priority == null)
@@ -84,6 +88,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> DeleteTicketPriority(Guid id)
         {
             if (id == null)

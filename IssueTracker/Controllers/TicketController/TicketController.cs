@@ -34,7 +34,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> GetAllTickets()
         {
             var allProjectManagers = await _repo.ProjectManager.GetProjectManagers();
@@ -63,7 +63,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> GetTicket(Guid id)
         {
             var tickets = await _repo.Ticket.GetTicket(id);
@@ -92,7 +92,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> CreateTicket(TicketForCreationDto ticket)
         {
             if (ticket == null)
@@ -122,7 +122,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer")]
         public async Task<IActionResult> UpdateTicket(Guid id, [FromBody] TicketForUpdateDto ticketToUpdate)
         {
             if (ticketToUpdate == null)
@@ -180,7 +180,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer")]
         public async Task<IActionResult> DeleteTicket(Guid id)
         {
             if (id == null)
@@ -211,6 +211,7 @@ namespace IssueTracker.Controllers
 
         [HttpGet("dashboard")]
         [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> TicketDataForDashboard()
         {
             var tickets = await _repo.Ticket.GetAllTickets();

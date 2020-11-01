@@ -34,7 +34,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> CreateProject(ProjectForCreation project)
         {
             if (project == null)
@@ -73,6 +73,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> GetAllProjects()
         {
             /* using this code var projectManagers = await _repo.ProjectManager.GetProjectManagers();
@@ -93,6 +94,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet("idname")]
+        [Authorize(Roles = "Admin,Developer, Project Manager, Submitter")]
         public async Task<IActionResult> GetProjectsIdName()
         {
             var projects = await _repo.Project.GetAllProjects();
@@ -101,6 +103,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Developer, Project Manager, Submitter")]
         public async Task<IActionResult> GetProject(Guid id)
         {
             if (id == null)
@@ -135,7 +138,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPut(("{id}"))]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectForUpdateDto projectToUpdate)
         {
             if (id == null)
@@ -199,6 +202,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpDelete(("{id}"))]
+        [Authorize(Roles = "Admin,Project Manager")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
             if (id == null)

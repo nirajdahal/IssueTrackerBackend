@@ -31,7 +31,7 @@ namespace IssueTracker.Controllers.UserProjectController
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> GetProjectsForUser(string id)
         {
             if (id == null)
@@ -71,7 +71,7 @@ namespace IssueTracker.Controllers.UserProjectController
         }
 
         [HttpGet("project/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> GetUsersProject(Guid Id)
         {
             var usersProject = await _repo.UserProject.GetUserProject(Id);

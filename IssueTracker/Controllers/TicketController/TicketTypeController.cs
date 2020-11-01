@@ -3,6 +3,7 @@ using Library.Contracts;
 using Library.Entities;
 using Library.Entities.DTO.TicketDto;
 using Library.Entities.Models.Tickets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Developer, Project Manager, Submitter")]
         public async Task<IActionResult> GetAllTicketType()
         {
             var ticketTypes = await _repo.TicketType.GetAllTicketType();
@@ -36,6 +38,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Developer, Project Manager, Submitter")]
         public async Task<IActionResult> CreateTicketType(TicketTypeVmDto newtype)
         {
             if (newtype == null)
@@ -57,6 +60,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Developer, Project Manager")]
         public async Task<IActionResult> UpdateTicketType(Guid id, [FromBody] TicketTypeVmDto type)
         {
             if (type == null)
@@ -78,6 +82,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Developer, Project Manager")]
         public async Task<IActionResult> DeleteTicketType(Guid id)
         {
             if (id == null)

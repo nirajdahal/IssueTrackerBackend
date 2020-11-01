@@ -30,7 +30,7 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Project Manager,Developer, Submitter")]
         public async Task<IActionResult> GetTicketsForUser(string id)
         {
             if (id == null)

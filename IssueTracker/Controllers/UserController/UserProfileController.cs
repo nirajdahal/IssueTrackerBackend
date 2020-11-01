@@ -27,7 +27,6 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Admin, Submitter")]
         [Authorize]
         //GET : /api/profile
         public async Task<Object> GetUserProfile()
