@@ -6,11 +6,13 @@ namespace Library.Entities.Models.Tickets
 {
     public class TicketComment
     {
-        [Column("TCommentsId")]
-        public Guid CommentsId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid TicketCommentId { get; set; }
 
         [MaxLength(300, ErrorMessage = "The comment length cannot exceed more than 300")]
         public string Description { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
         [ForeignKey(nameof(Ticket))]
         public Guid TicketId { get; set; }

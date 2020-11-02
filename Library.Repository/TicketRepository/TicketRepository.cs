@@ -32,6 +32,7 @@ namespace Library.Repository
                 .Include(x => x.TicketType)
                 .Include(x => x.UsersTickets)
                 .Include(x => x.Project)
+                .Include(x => x.Comments)
                 .Include(x => x.TicketStatus).ToListAsync();
             return tickets;
         }
@@ -43,6 +44,7 @@ namespace Library.Repository
                 .Include(x => x.TicketType)
                 .Include(x => x.UsersTickets)
                 .Include(x => x.Project)
+                .Include(x => x.Comments)
                 .Include(x => x.TicketStatus).SingleOrDefaultAsync();
             return tickets;
         }

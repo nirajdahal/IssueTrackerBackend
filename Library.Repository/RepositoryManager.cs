@@ -1,5 +1,6 @@
 ﻿using Library.Contracts;
 using Library.Contracts.ProjectManagerContracts;
+using Library.Contracts.TicketContracts;
 using Library.Contracts.UserProjectContracts;
 using Library.Entities;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace Library.Repository
         private ITicketRepository _ticketRepository;
         private ITicketTypeRepository _ticketTypeRepository;
         private ITicketStatusRepository _ticketStatusRepository;
+        private ITicketCommentRepository _ticketcommentRepository;
         private ITicketPriorityRepository _ticketPriorityRepository;
         private IUserTicketRepository _userTicketRepository;
         private IUserProjectRepository _userProjectRepository;
@@ -81,6 +83,18 @@ namespace Library.Repository
                     _ticketPriorityRepository = new TicketPriorityRepository(_context);
                 }
                 return _ticketPriorityRepository;
+            }
+        }
+
+        public ITicketCommentRepository TicketComment
+        {
+            get
+            {
+                if (_ticketcommentRepository == null)
+                {
+                    _ticketcommentRepository = new TicketCommentRepository(_context);
+                }
+                return _ticketcommentRepository;
             }
         }
 

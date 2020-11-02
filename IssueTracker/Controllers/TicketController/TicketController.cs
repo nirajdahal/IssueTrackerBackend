@@ -38,6 +38,7 @@ namespace IssueTracker.Controllers
         public async Task<IActionResult> GetAllTickets()
         {
             var allProjectManagers = await _repo.ProjectManager.GetProjectManagers();
+            var ticketComments = await _repo.TicketComment.GetAllTicketComment();
             var tickets = await _repo.Ticket.GetAllTickets();
             var ticketsVm = _mapper.Map<IEnumerable<GetAllTicketVmDto>>(tickets);
 
@@ -75,7 +76,6 @@ namespace IssueTracker.Controllers
             }
             var projectManagers = await _repo.ProjectManager.GetProjectManager(tickets.ProjectId);
             var ticketsVm = _mapper.Map<GetAllTicketVmDto>(tickets);
-
             var userTicket = ticketsVm.UsersTicketsVm;
 
             foreach (var user in userTicket)
