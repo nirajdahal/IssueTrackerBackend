@@ -112,7 +112,7 @@ namespace IssueTracker.Controllers
             var userList = User.Claims.ToList();
             //Getting the username and email from jwt token to set it to CreatedBy name and email
             var userName = User.Claims.ToList()[1].Value;
-            var userEmail = User.Claims.ToList()[2].Value;
+            var userEmail = User.Claims.ToList()[3].Value;
             ticketToCreate.SubmittedByName = userName;
             ticketToCreate.SubmittedByEmail = userEmail;
             ticketToCreate.CreatedAt = DateTime.Now;

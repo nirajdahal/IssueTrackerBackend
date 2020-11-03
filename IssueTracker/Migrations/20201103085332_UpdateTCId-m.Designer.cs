@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20201029183105_initial")]
-    partial class initial
+    [Migration("20201103085332_UpdateTCId-m")]
+    partial class UpdateTCIdm
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,8 +32,8 @@ namespace IssueTracker.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(160)")
-                        .HasMaxLength(160);
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<string>("SubmittedByEmail")
                         .HasColumnType("nvarchar(max)");
@@ -42,8 +42,8 @@ namespace IssueTracker.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");
@@ -71,8 +71,8 @@ namespace IssueTracker.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(160)")
-                        .HasMaxLength(160);
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
@@ -94,8 +94,8 @@ namespace IssueTracker.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(60)")
-                        .HasMaxLength(60);
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -121,24 +121,28 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnName("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("CommentsId")
-                        .HasColumnName("TCommentsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(160)")
-                        .HasMaxLength(160);
-
                     b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("TicketId");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
+
+                    b.Property<Guid>("TicketCommentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TicketId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("TicketComment");
                 });
@@ -190,16 +194,16 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.UsersProjects.ProjectManager", b =>
                 {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Id")
                         .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("ProjectId", "Id");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("Id");
 
                     b.ToTable("ProjectManager");
                 });
@@ -458,7 +462,7 @@ namespace IssueTracker.Migrations
                         .IsRequired();
 
                     b.HasOne("Library.Entities.Models.Tickets.TicketPriority", "TicketPriority")
-                        .WithMany("Ticket")
+                        .WithMany()
                         .HasForeignKey("TPriorityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -478,11 +482,9 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
                 {
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Library.Entities.Models.ApplicationUser", null)
                         .WithMany("TicketComments")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
                         .WithMany("Comments")

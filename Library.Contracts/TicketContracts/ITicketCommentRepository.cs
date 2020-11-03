@@ -10,7 +10,7 @@ namespace Library.Contracts.TicketContracts
     {
         Task<IEnumerable<TicketComment>> GetAllTicketComment();
 
-        Task<TicketComment> GetTicketComment(Guid commentId);
+        Task<List<TicketComment>> GetTicketComment(Guid commentId);
 
         void CreateTicketComment(TicketComment comment);
 

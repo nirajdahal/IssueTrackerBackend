@@ -4,6 +4,7 @@ using Library.Entities.Models.Tickets;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,9 +32,9 @@ namespace Library.Repository
             return ticketspriorities;
         }
 
-        public async Task<TicketComment> GetTicketComment(Guid ticketId)
+        public async Task<List<TicketComment>> GetTicketComment(Guid ticketId)
         {
-            var TicketComment = await FindByCondition(x => x.TicketId.Equals(ticketId)).SingleOrDefaultAsync();
+            var TicketComment = await FindAll().Where(x => x.TicketId.Equals(ticketId)).ToListAsync();
             return TicketComment;
         }
 

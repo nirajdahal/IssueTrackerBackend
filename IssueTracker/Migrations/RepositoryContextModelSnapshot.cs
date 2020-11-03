@@ -119,27 +119,31 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
                 {
-                    b.Property<Guid>("TicketId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Id")
-                        .HasColumnName("UserId")
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
-                    b.Property<Guid>("TicketCommentId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("TicketId", "Id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("TicketId");
 
                     b.ToTable("TicketComment");
                 });
@@ -479,13 +483,11 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
                 {
-                    b.HasOne("Library.Entities.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Library.Entities.Models.ApplicationUser", null)
                         .WithMany("TicketComments")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("Library.Entities.Models.Tickets.Ticket", "Ticket")
+                    b.HasOne("Library.Entities.Models.Tickets.Ticket", null)
                         .WithMany("Comments")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)

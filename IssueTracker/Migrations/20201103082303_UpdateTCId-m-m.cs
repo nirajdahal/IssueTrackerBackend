@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IssueTracker.Migrations
 {
-    public partial class initial : Migration
+    public partial class UpdateTCIdmm : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,8 +53,8 @@ namespace IssueTracker.Migrations
                 columns: table => new
                 {
                     ProjectId = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(maxLength: 60, nullable: true),
-                    Description = table.Column<string>(maxLength: 160, nullable: true),
+                    Title = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdateAt = table.Column<DateTime>(nullable: false),
                     SubmittedByName = table.Column<string>(nullable: true),
@@ -213,12 +213,12 @@ namespace IssueTracker.Migrations
                 name: "ProjectManager",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    ProjectId = table.Column<Guid>(nullable: false)
+                    ProjectId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectManager", x => x.UserId);
+                    table.PrimaryKey("PK_ProjectManager", x => new { x.ProjectId, x.UserId });
                     table.ForeignKey(
                         name: "FK_ProjectManager_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -262,8 +262,8 @@ namespace IssueTracker.Migrations
                 columns: table => new
                 {
                     TicketId = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(maxLength: 60, nullable: false),
-                    Description = table.Column<string>(maxLength: 160, nullable: false),
+                    Title = table.Column<string>(maxLength: 200, nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: false),
                     UpdatedByName = table.Column<string>(nullable: true),
                     UpdatedByEmail = table.Column<string>(nullable: true),
                     SubmittedByName = table.Column<string>(nullable: true),
@@ -308,14 +308,15 @@ namespace IssueTracker.Migrations
                 name: "TicketComment",
                 columns: table => new
                 {
+                    TicketId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    TCommentsId = table.Column<Guid>(nullable: false),
-                    Description = table.Column<string>(maxLength: 160, nullable: true),
-                    TicketId = table.Column<Guid>(nullable: false)
+                    TicketCommentId = table.Column<Guid>(nullable: false),
+                    Description = table.Column<string>(maxLength: 300, nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TicketComment", x => x.UserId);
+                    table.PrimaryKey("PK_TicketComment", x => new { x.TicketId, x.UserId });
                     table.ForeignKey(
                         name: "FK_TicketComment_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -394,14 +395,14 @@ namespace IssueTracker.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectManager_ProjectId",
+                name: "IX_ProjectManager_UserId",
                 table: "ProjectManager",
-                column: "ProjectId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TicketComment_TicketId",
+                name: "IX_TicketComment_UserId",
                 table: "TicketComment",
-                column: "TicketId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_ProjectId",

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueTracker.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20201031155720_updatedDataValidation")]
-    partial class updatedDataValidation
+    [Migration("20201103082303_UpdateTCId-m-m")]
+    partial class UpdateTCIdmm
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -121,24 +121,26 @@ namespace IssueTracker.Migrations
 
             modelBuilder.Entity("Library.Entities.Models.Tickets.TicketComment", b =>
                 {
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Id")
                         .HasColumnName("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("CommentsId")
-                        .HasColumnName("TCommentsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
-                    b.Property<Guid>("TicketId")
+                    b.Property<Guid>("TicketCommentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("TicketId", "Id");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex("Id");
 
                     b.ToTable("TicketComment");
                 });
@@ -458,7 +460,7 @@ namespace IssueTracker.Migrations
                         .IsRequired();
 
                     b.HasOne("Library.Entities.Models.Tickets.TicketPriority", "TicketPriority")
-                        .WithMany("Ticket")
+                        .WithMany()
                         .HasForeignKey("TPriorityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
