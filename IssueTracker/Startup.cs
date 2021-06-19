@@ -1,14 +1,17 @@
 using AutoMapper;
 using IssueTracker.Extensions;
+using Library.Entities;
 using Library.Entities.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using NLog;
+using System;
 using System.IO;
 
 namespace IssueTracker
@@ -26,17 +29,20 @@ namespace IssueTracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Inject AppSettings
-            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+           
             services.ConfigureCors();
             services.ConfigureLoggerService();
             services.ConfigureIISIntegration();
-            services.ConfigureSqlContext(Configuration);
+   
+            services.ConfigureSqlContextProduction(Configuration);
+
             services.ConfigureIdentityService();
             services.ConfigureJwtService(Configuration);
             services.ConfigureIdenittyPassword();
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers(config =>
+
+
+            services.AddControllersWithViews(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
@@ -56,22 +62,40 @@ namespace IssueTracker
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "";
+                    await next();
+                }
+            });
+
 
             app.UseHttpsRedirection();
-            app.UseCors("CorsPolicy");
-            app.UseRouting();
 
+
+            app.UseCors("CorsPolicy");
+            app.UseDefaultFiles(); 
+            app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
+         
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+               
             });
+
+        }
         }
     }
-}

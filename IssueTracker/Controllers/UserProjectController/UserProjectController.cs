@@ -61,10 +61,7 @@ namespace IssueTracker.Controllers.UserProjectController
                 usersProject = (await _repo.UserProject.GetAllProjectsForUser(id)).ToList();
             }
 
-            foreach (var userProject in usersProject)
-            {
-                var user = await _repo.UserProject.GetUserProject(userProject.ProjectId);
-            }
+           
 
             var userProjectsToReturn = _mapper.Map<IEnumerable<UserProjectVmDto>>(usersProject);
             return Ok(userProjectsToReturn.Select(x => x.Project));

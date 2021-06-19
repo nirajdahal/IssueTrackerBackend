@@ -27,7 +27,7 @@ namespace Library.Entities.Models.Projects
         public string UpdatedByEmail { get; set; }
         public ICollection<Ticket> Ticket { get; set; }
 
-        public ICollection<ProjectManager> ProjectManagers { get; set; }
+        public virtual ICollection<ProjectManager> ProjectManagers { get; set; }
 
         public ICollection<UserProject> UsersProjects { get; set; }
     }

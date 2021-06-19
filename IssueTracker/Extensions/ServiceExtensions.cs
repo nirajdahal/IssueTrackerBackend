@@ -35,6 +35,11 @@ namespace IssueTracker.Extensions
         opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b
         => b.MigrationsAssembly("IssueTracker")));
 
+        public static void ConfigureSqlContextProduction(this IServiceCollection services, IConfiguration configuration) =>
+    services.AddDbContext<RepositoryContext>(opts =>
+    opts.UseSqlServer(configuration.GetConnectionString("sqlConnectionProd"), b
+    => b.MigrationsAssembly("IssueTracker")));
+
         public static void ConfigureIdentityService(this IServiceCollection services) =>
         services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<RepositoryContext>();
 
@@ -54,7 +59,7 @@ namespace IssueTracker.Extensions
 
         public static void ConfigureJwtService(this IServiceCollection services, IConfiguration Configuration)
         {
-            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+            var key = Encoding.UTF8.GetBytes("`!`)$^`%&`*@issu31r@ck3r!|¬9+*a-T-s|¬`(");
 
             services.AddAuthentication(x =>
             {
