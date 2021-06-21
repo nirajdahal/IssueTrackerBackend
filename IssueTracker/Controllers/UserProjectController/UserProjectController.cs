@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Contracts;
+using Library.Entities.DTO.ProjectDto;
 using Library.Entities.DTO.UserProjectsDto;
 using Library.Entities.Models;
 using Library.Entities.Models.UsersProjects;
@@ -51,20 +52,26 @@ namespace IssueTracker.Controllers.UserProjectController
             List<UserProject> usersProject = new List<UserProject>();
             string userRole = User.Claims.ToList()[3].Value;
 
+            List<ProjectVmDto> projectToReturn = new List<ProjectVmDto>();
             if (userRole == "Project Manager")
             {
                 var data = projectManagers.Where(x => x.Id.Equals(id));
-                usersProject = data.Select(x => x.Project).SelectMany(x => x.UsersProjects).ToList();
+                //usersProject = data.Select(x => x.Project).SelectMany(x => x.UsersProjects).ToList();
+                for (int i = 0; i < data.ToList().Count; i++)
+                {
+                    projectToReturn.Add(_mapper.Map<ProjectVmDto>(data.ToList()[i].Project));
+                }
+                
             }
             else
-            {
+             {
                 usersProject = (await _repo.UserProject.GetAllProjectsForUser(id)).ToList();
+                var userProjectsToReturn = _mapper.Map<IEnumerable<UserProjectVmDto>>(usersProject);
+                projectToReturn = userProjectsToReturn.Select(x => x.Project).Distinct().ToList();
             }
 
-           
-
-            var userProjectsToReturn = _mapper.Map<IEnumerable<UserProjectVmDto>>(usersProject);
-            return Ok(userProjectsToReturn.Select(x => x.Project));
+          
+            return Ok(projectToReturn);
         }
 
         [HttpGet("project/{id}")]

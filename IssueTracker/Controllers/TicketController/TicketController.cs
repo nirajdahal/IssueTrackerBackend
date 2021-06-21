@@ -105,7 +105,8 @@ namespace IssueTracker.Controllers
                 _logger.LogError("Invalid model state for the Ticket");
                 return UnprocessableEntity(ModelState);
             }
-            ticket.TStatusId = new Guid("FACCD8AB-7923-410B-FE8D-08D91225ADAE");
+            
+            ticket.TStatusId = new Guid("4bb96000-7e4c-4e69-ae20-08d934dbcd3a");
 
             var ticketToCreate = _mapper.Map<Ticket>(ticket);
 

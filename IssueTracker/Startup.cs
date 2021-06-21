@@ -31,6 +31,7 @@ namespace IssueTracker
         {
            
             services.ConfigureCors();
+  
             services.ConfigureLoggerService();
             services.ConfigureIISIntegration();
    
@@ -62,7 +63,7 @@ namespace IssueTracker
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+            app.UseCors("CorsPolicy");
 
             if (env.IsDevelopment())
             {
@@ -82,11 +83,15 @@ namespace IssueTracker
             app.UseHttpsRedirection();
 
 
-            app.UseCors("CorsPolicy");
+           
             app.UseDefaultFiles(); 
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
+            app.UseCors(
+                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            ); //This needs to set everything allowed
+
             app.UseAuthorization();
 
          
